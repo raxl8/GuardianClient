@@ -15,7 +15,7 @@ workspace "Guardian"
 include "vendor"
 
 project "Guardian"
-    kind "ConsoleApp"
+    kind "WindowedApp"
     language "C++"
     cppdialect "C++20"
 
@@ -24,3 +24,6 @@ project "Guardian"
 
     includedirs "src" -- fix intellisense not finding pch.h
     files { "src/**.h", "src/**.cpp" }
+
+    links "d3d11"
+    submodules "imgui"
