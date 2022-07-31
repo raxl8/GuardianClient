@@ -7,3 +7,6 @@ indent_size = 4
 end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = false
+
+[*.{c++,cc,cpp,cxx,h,h++,hh,hpp,hxx,inl,ipp,tlh,tli}]
+cpp_indent_lambda_braces_when_parameter = false
