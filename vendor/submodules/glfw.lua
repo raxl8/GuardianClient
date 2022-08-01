@@ -19,13 +19,16 @@ return {
             "src/osmesa_context.c",
             "src/vulkan.c",
             "src/window.c",
-            "src/wgl_context.h",
-            "src/wgl_context.c"
         }
 
         if os.istarget('windows') then
             defines "_GLFW_WIN32"
-            files { "src/win32_*.h", "src/win32_*.c" }
+            files {
+                "src/wgl_context.h",
+                "src/wgl_context.c",
+                "src/win32_*.h",
+                "src/win32_*.c"
+            }
         end
     end
 }
