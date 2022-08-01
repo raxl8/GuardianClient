@@ -6,8 +6,6 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl2.h>
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 ImGuiLayer::ImGuiLayer(const UniquePtr<Window>& window)
 {
 #ifdef _DEBUG
