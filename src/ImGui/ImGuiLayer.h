@@ -2,12 +2,11 @@
 
 #include "Core/Layer.h"
 #include "Core/Window.h"
-#include "DirectX/DirectXDevice.h"
 
 class ImGuiLayer : public Layer
 {
 public:
-	ImGuiLayer(const UniquePtr<Window>& window, const UniquePtr<DirectXDevice>& directX);
+	ImGuiLayer(const UniquePtr<Window>& window);
 	~ImGuiLayer();
 
 	virtual void OnNewFrame() override;

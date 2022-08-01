@@ -3,12 +3,12 @@
 #include "ImGuiLayer.h"
 
 #include <imgui.h>
-#include <imgui_impl_win32.h>
-#include <imgui_impl_dx11.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl2.h>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-ImGuiLayer::ImGuiLayer(const UniquePtr<Window>& window, const UniquePtr<DirectXDevice>& device)
+ImGuiLayer::ImGuiLayer(const UniquePtr<Window>& window)
 {
 #ifdef _DEBUG
 	IMGUI_CHECKVERSION();
@@ -20,29 +20,21 @@ ImGuiLayer::ImGuiLayer(const UniquePtr<Window>& window, const UniquePtr<DirectXD
 
 	ImGui::StyleColorsDark();
 
-	ImGui_ImplWin32_Init(window->GetNativeWindow());
-	ImGui_ImplDX11_Init(device->GetNativeDevice(), device->GetNativeDeviceContext());
-
-	window->OnProcedure.Subscribe([this](HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-	{
-		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-			return false;
-
-		return true;
-	});
+	ImGui_ImplGlfw_InitForOpenGL(window->GetNativeWindow(), true);
+	ImGui_ImplOpenGL2_Init();
 }
 
 ImGuiLayer::~ImGuiLayer()
 {
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
+	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
 void ImGuiLayer::OnNewFrame()
 {
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
+	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
@@ -55,5 +47,5 @@ void ImGuiLayer::OnImGuiRender()
 void ImGuiLayer::OnRender()
 {
 	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 }

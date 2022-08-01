@@ -7,31 +7,23 @@
 
 Application::Application()
 {
-	m_Window = MakeUnique<Window>(L"Guardian");
-	m_Device = MakeUnique<DirectXDevice>(m_Window);
-	m_ImGuiLayer = MakeUnique<ImGuiLayer>(m_Window, m_Device);
+	m_Window = MakeUnique<Window>("Guardian");
+	m_ImGuiLayer = MakeUnique<ImGuiLayer>(m_Window);
 }
 
 int Application::Run()
 {
-	m_Window->SetVisibility(true);
-
-	while (true)
+	while (!m_Window->ShouldClose())
 	{
-		if (!m_Window->Poll())
-			break;
+		m_Window->Poll();
 
 		m_ImGuiLayer->OnNewFrame();
 		m_ImGuiLayer->OnImGuiRender();
 
-		m_Device->SetRenderTarget();
-
 		m_ImGuiLayer->OnRender();
 
-		m_Device->Present();
+		m_Window->Update();
 	}
-
-	m_Window->SetVisibility(false);
 
 	return EXIT_SUCCESS;
 }

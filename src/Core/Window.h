@@ -2,22 +2,20 @@
 
 #include "Core/Callback.h"
 
+struct GLFWwindow;
 class Window
 {
 public:
-	Window(const std::wstring& title);
+	Window(const std::string& title);
 	~Window();
 
-	void SetVisibility(bool visible = true);
-	bool Poll();
+	bool ShouldClose();
+	void Poll();
+	void Update();
 
-	inline HWND GetNativeWindow() { return m_Handle; }
-
-public:
-	Callback<HWND, UINT, WPARAM, LPARAM> OnProcedure;
+	inline GLFWwindow* GetNativeWindow() { return m_Window; }
 
 private:
-	std::wstring m_Title;
-	WNDCLASSEX m_Class;
-	HWND m_Handle;
+	std::string m_Title;
+	GLFWwindow* m_Window;
 };

@@ -25,5 +25,5 @@ project "Guardian"
     includedirs "src" -- fix intellisense not finding pch.h
     files { "src/**.h", "src/**.cpp" }
 
-    links "d3d11"
-    submodules "imgui"
+    links "opengl32"
+    submodules { "glfw", "imgui" }
