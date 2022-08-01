@@ -15,7 +15,7 @@ public:
 
 	void CleanupRenderTarget();
 	void CreateRenderTarget();
-	void SetRenderTargets();
+	void SetRenderTarget();
 	void Present();
 
 	inline ID3D11Device* GetNativeDevice() { return m_Device; }

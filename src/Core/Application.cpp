@@ -24,7 +24,7 @@ int Application::Run()
 		m_ImGuiLayer->OnNewFrame();
 		m_ImGuiLayer->OnImGuiRender();
 
-		m_Device->SetRenderTargets();
+		m_Device->SetRenderTarget();
 
 		m_ImGuiLayer->OnRender();
 
