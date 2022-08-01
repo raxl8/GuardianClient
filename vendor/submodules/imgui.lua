@@ -8,5 +8,6 @@ return {
         cppdialect "C++17"
 
         files { "*.h", "*.cpp" }
+        removefiles "imgui_demo.cpp"
     end
 }
