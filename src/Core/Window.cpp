@@ -4,13 +4,14 @@
 
 #include <GLFW/glfw3.h>
 
-Window::Window(const std::string& title)
+Window::Window(const std::string& title, int width, int height)
 	: m_Title(title)
 {
 	// We can init here as we know there's only going to be 1 window
 	glfwInit();
 
-	m_Window = glfwCreateWindow(1280, 720, m_Title.c_str(), NULL, NULL);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	m_Window = glfwCreateWindow(width, height, m_Title.c_str(), NULL, NULL);
 	if (m_Window == NULL)
 		FatalError();
 

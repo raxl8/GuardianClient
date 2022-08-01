@@ -6,7 +6,7 @@ struct GLFWwindow;
 class Window
 {
 public:
-	Window(const std::string& title);
+	Window(const std::string& title, int width, int height);
 	~Window();
 
 	bool ShouldClose();

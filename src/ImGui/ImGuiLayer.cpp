@@ -29,20 +29,14 @@ ImGuiLayer::~ImGuiLayer()
 	ImGui::DestroyContext();
 }
 
-void ImGuiLayer::OnNewFrame()
+void ImGuiLayer::Begin()
 {
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
-void ImGuiLayer::OnImGuiRender()
-{
-	ImGui::SetNextWindowPos({ 0.f, 0.f });
-	ImGui::ShowDemoWindow(nullptr);
-}
-
-void ImGuiLayer::OnRender()
+void ImGuiLayer::End()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

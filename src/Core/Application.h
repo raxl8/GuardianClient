@@ -4,6 +4,8 @@
 
 #include "ImGui/ImGuiLayer.h"
 
+#include "UserInterface/UserInterface.h"
+
 class Application
 {
 public:
@@ -12,6 +14,7 @@ public:
 	int Run();
 
 private:
-	std::unique_ptr<Window> m_Window;
-	std::unique_ptr<ImGuiLayer> m_ImGuiLayer;
+	UniquePtr<Window> m_Window;
+	UniquePtr<ImGuiLayer> m_ImGuiLayer;
+	UniquePtr<UserInterface> m_UserInterface;
 };

@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 
+#include "Core/Config.h"
 #include "Core/Error.h"
 #include "Core/Pointers.h"
 
