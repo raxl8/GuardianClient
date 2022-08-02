@@ -7,6 +7,7 @@
 #include "Core/Config.h"
 #include "Core/Error.h"
 #include "Core/Pointers.h"
+#include "Core/Version.h"
 
 #include "Core/Platform.h"
 

@@ -22,7 +22,11 @@ project "Guardian"
     pchheader "pch.h"
     pchsource "src/pch.cpp"
 
-    includedirs "src" -- fix intellisense not finding pch.h
+    includedirs {
+        "assets",
+        "src" -- fix intellisense not finding pch.h
+    }
+
     files { "src/**.h", "src/**.cpp" }
 
     links "opengl32"
