@@ -28,9 +28,11 @@ project "Guardian"
     }
 
     files { "src/**.h", "src/**.cpp" }
-    if os.istarget('windows') ~= true then
+    submodules { "glfw", "imgui" }
+
+    if os.istarget('windows') then
+        links "opengl32"
+        submodules "minhook"
+    else
         removefiles "src/**.Win32.cpp"
     end
-
-    links "opengl32"
-    submodules { "glfw", "imgui", "minhook" }
