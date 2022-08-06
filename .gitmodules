@@ -7,3 +7,9 @@
 [submodule "vendor/submodules/minhook"]
 	path = vendor/submodules/minhook
 	url = https://github.com/TsudaKageyu/minhook
+[submodule "vendor/submodules/utfcpp"]
+	path = vendor/submodules/utfcpp
+	url = https://github.com/nemtrif/utfcpp
+[submodule "vendor/submodules/fmt"]
+	path = vendor/submodules/fmt
+	url = https://github.com/fmtlib/fmt
