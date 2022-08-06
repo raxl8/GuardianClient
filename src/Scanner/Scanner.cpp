@@ -7,7 +7,7 @@
 Scanner::Scanner()
 	: m_ScanData{ 0, {} }
 {
-	m_Stages.push_back(MakeUnique<GDN_PLATFORMTYPE(RecycleBinStage)>(this));
+	m_Stages.push_back(MakeUnique<RecycleBinStage>(this));
 }
 
 bool Scanner::Run()

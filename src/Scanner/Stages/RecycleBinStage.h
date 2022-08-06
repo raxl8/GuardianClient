@@ -10,14 +10,7 @@ public:
 	{
 	}
 
-	virtual ~RecycleBinStage() = default;
-};
-
-class RecycleBinStageWindows : public RecycleBinStage
-{
-public:
-	RecycleBinStageWindows(Scanner* scanner);
-	~RecycleBinStageWindows() = default;
+	~RecycleBinStage() = default;
 
 	virtual StageResult Run() override;
 };

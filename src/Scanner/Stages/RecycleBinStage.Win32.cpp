@@ -6,12 +6,12 @@
 
 #include <sddl.h>
 
-RecycleBinStageWindows::RecycleBinStageWindows(Scanner* scanner)
+RecycleBinStage::RecycleBinStage(Scanner* scanner)
 	: RecycleBinStage(scanner)
 {
 }
 
-StageResult RecycleBinStageWindows::Run()
+StageResult RecycleBinStage::Run()
 {
 	HANDLE token;
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token))
