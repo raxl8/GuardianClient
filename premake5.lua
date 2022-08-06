@@ -28,9 +28,10 @@ project "Guardian"
     }
 
     files { "src/**.h", "src/**.cpp" }
-    submodules { "glfw", "imgui" }
+    submodules { "glfw", "imgui", "utfcpp", "fmt" }
 
     if os.istarget('windows') then
+        defines "_CRT_SECURE_NO_WARNINGS"
         links "opengl32"
         submodules "minhook"
     else

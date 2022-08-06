@@ -8,7 +8,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 {
 	HookFunction::RunAll();
 
-	auto application = MakeUnique<Application>();
-	return application->Run();
+	auto application = new Application;
+	Instance<Application>::Set(application);
+
+	auto exitCode = application->Run();
+
+	delete application;
+
+	return exitCode;
 }
 #endif
