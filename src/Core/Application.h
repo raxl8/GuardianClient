@@ -2,6 +2,7 @@
 
 #include "Core/Window.h"
 #include "ImGui/ImGuiLayer.h"
+#include "Networking/Websocket.h"
 #include "Scanner/Scanner.h"
 #include "UserInterface/UserInterface.h"
 
@@ -15,6 +16,7 @@ public:
 	inline const UniquePtr<Scanner>& GetScanner() { return m_Scanner; }
 
 private:
+	UniquePtr<Websocket> m_Websocket;
 	UniquePtr<Scanner> m_Scanner;
 	UniquePtr<Window> m_Window;
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;

@@ -28,7 +28,7 @@ project "Guardian"
     }
 
     files { "src/**.h", "src/**.cpp" }
-    submodules { "glfw", "imgui", "utfcpp", "fmt" }
+    submodules { "glfw", "imgui", "utfcpp", "fmt", "ixwebsocket" }
 
     if os.istarget('windows') then
         defines "_CRT_SECURE_NO_WARNINGS"
