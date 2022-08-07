@@ -10,17 +10,19 @@ class Application
 {
 public:
 	Application();
+	~Application() = default;
 
 	int Run();
 
+	inline const UniquePtr<UserInterface>& GetUserInterface() { return m_UserInterface; }
 	inline const UniquePtr<Scanner>& GetScanner() { return m_Scanner; }
 
 private:
 	UniquePtr<Websocket> m_Websocket;
-	UniquePtr<Scanner> m_Scanner;
 	UniquePtr<Window> m_Window;
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;
 	UniquePtr<UserInterface> m_UserInterface;
+	UniquePtr<Scanner> m_Scanner;
 };
 
 DEFINE_INSTANCE_TYPE(Application);

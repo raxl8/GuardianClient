@@ -3,6 +3,7 @@
 #include "UserInterface.h"
 
 #include "Views/HomeView.h"
+#include "Views/ErrorView.h"
 
 #include <imgui.h>
 #include <fonts/Roboto/Roboto-Regular.h>
@@ -34,5 +35,16 @@ void UserInterface::RenderImGui()
 
 void UserInterface::SetView(UniquePtr<View>&& newView)
 {
-	m_CurrentView = std::move(newView);
+	std::unique_lock lock(m_CurrentViewMutex);
+
+	if (m_CanChangeView)
+		m_CurrentView = std::move(newView);
+}
+
+void UserInterface::DisplayError(const std::string& title, const std::string& description)
+{
+	std::unique_lock lock(m_CurrentViewMutex);
+
+	m_CanChangeView = false;
+	m_CurrentView = MakeUnique<ErrorView>(this, title, description);
 }

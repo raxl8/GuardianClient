@@ -10,3 +10,5 @@
 #else
 #define WEBSOCKET_ENDPOINT "wss://client.guardian.ac/"
 #endif
+
+#define WEBSOCKET_PROTOCOL_VERSION 1

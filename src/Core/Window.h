@@ -12,6 +12,8 @@ public:
 	bool ShouldClose();
 	void Poll();
 	void Update();
+	void Show();
+	void Hide();
 
 	inline GLFWwindow* GetNativeWindow() { return m_Window; }
 

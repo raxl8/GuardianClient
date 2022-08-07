@@ -26,27 +26,27 @@ public:
 	T Read(uint64_t offset = 0)
 	{
 		m_ReadCursor += offset;
-		if (m_ReadCursor >= m_Data.size())
-			return 0;
+		if (!EnsureReadableSize(sizeof(T)))
+			return T{};
 
-		uint8_t data[sizeof(T)];
-		for (int i = 0; i < sizeof(T); i++)
-			data[i] = m_Data[m_ReadCursor + sizeof(T) - 1 - i];
+		auto data = ReadBytes(sizeof(T));
+		if (data.size() != sizeof(T))
+			return T{};
 
-		m_ReadCursor += sizeof(T);
-
-		return *(T*)data;
+		return *(T*)&data[0];
 	}
 
-	std::vector<uint8_t> ReadArray(uint64_t offset = 0)
+	std::vector<uint8_t> ReadBytes(size_t size, uint64_t offset = 0)
 	{
 		m_ReadCursor += offset;
+		if (!EnsureReadableSize(size))
+			return {};
 
-		int length = Read<int>();
-		auto value = std::vector<uint8_t>(&m_Data[m_ReadCursor], &m_Data[m_ReadCursor] + length);
-		m_ReadCursor += length;
+		std::vector<uint8_t> data(size);
+		std::memcpy(&data[0], &m_Data[m_ReadCursor], size);
+		m_ReadCursor += size;
 
-		return value;
+		return data;
 	}
 
 	std::string ReadString(uint64_t offset = 0)
@@ -81,17 +81,6 @@ public:
 		WriteBytes(&data[0], data.size(), offset);
 	}
 
-	void WriteArray(const std::vector<uint8_t>& value, uint64_t offset = 0)
-	{
-		m_WriteCursor += offset;
-
-		auto arrayLength = (int)value.size();
-		EnsureWriteableSize(sizeof(arrayLength) + value.size());
-
-		Write(arrayLength);
-		WriteBytes(value);
-	}
-
 	void WriteString(std::string_view value, uint64_t offset = 0)
 	{
 		m_WriteCursor += offset;
@@ -109,6 +98,11 @@ public:
 	}
 
 private:
+	bool EnsureReadableSize(size_t size)
+	{
+		return m_ReadCursor + size <= m_Data.size();
+	}
+
 	void EnsureWriteableSize(size_t size)
 	{
 		if (m_WriteCursor + size > m_Data.size())

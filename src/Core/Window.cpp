@@ -11,6 +11,7 @@ Window::Window(const std::string& title, int width, int height)
 	glfwInit();
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 	m_Window = glfwCreateWindow(width, height, m_Title.c_str(), NULL, NULL);
 	if (m_Window == NULL)
 		FatalError();
@@ -39,4 +40,14 @@ void Window::Update()
 {
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapBuffers(m_Window);
+}
+
+void Window::Show()
+{
+	glfwShowWindow(m_Window);
+}
+
+void Window::Hide()
+{
+	glfwHideWindow(m_Window);
 }
