@@ -2,4 +2,4 @@
 
 #include "Core/BuildInfo.h"
 
-#define VERSION_DESCRIPTION VERSION_TAG " (" VERSION_CHANNEL ")"
+#define BUILD_DESCRIPTION BUILD_VERSION " (" BUILD_CHANNEL ")"

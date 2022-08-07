@@ -27,8 +27,8 @@ void UserInterface::RenderImGui()
 
 	m_CurrentView->RenderImGui();
 
-	ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(VERSION_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
-	ImGui::TextUnformatted(VERSION_DESCRIPTION);
+	ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(BUILD_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
+	ImGui::TextUnformatted(BUILD_DESCRIPTION);
 
 	ImGui::End();
 }

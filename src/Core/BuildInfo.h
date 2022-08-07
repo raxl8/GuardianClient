@@ -1,4 +1,5 @@
 #pragma once
 
-#define VERSION_CHANNEL "dev"
-#define VERSION_TAG "0.0"
+#define BUILD_CHANNEL "dev"
+#define BUILD_COMMIT "0000000"
+#define BUILD_VERSION "0.0"
