@@ -34,4 +34,6 @@ private:
 private:
 	ix::WebSocket m_Websocket;
 	WebsocketState m_State;
+	std::mutex m_ConnectMutex;
+	std::condition_variable m_ConnectCondition;
 };

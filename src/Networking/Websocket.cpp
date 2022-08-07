@@ -35,6 +35,8 @@ Websocket::~Websocket()
 void Websocket::Start()
 {
 	OnConnect.Subscribe([this]() {
+		m_ConnectCondition.notify_one();
+
 		PacketStream packet;
 		packet.Write<PacketID>(PacketID::Handshake);
 		packet.Write<uint16_t>(WEBSOCKET_PROTOCOL_VERSION);
@@ -43,6 +45,14 @@ void Websocket::Start()
 	});
 
 	m_Websocket.start();
+
+	{
+		std::unique_lock lock(m_ConnectMutex);
+		m_ConnectCondition.wait_for(lock, std::chrono::seconds(20));
+	}
+
+	if (!IsConnected())
+		Instance<Application>::Get()->GetUserInterface()->DisplayError("Websocket Error", "Could not reach server, maybe down? Try again at a later time.");
 }
 
 void Websocket::Stop()
@@ -83,6 +93,7 @@ void Websocket::OnMessage(const ix::WebSocketMessagePtr& message)
 		OnDisconnect();
 		break;
 	case ix::WebSocketMessageType::Error:
+		m_ConnectCondition.notify_one();
 		OnError(message->errorInfo.reason);
 		break;
 	case ix::WebSocketMessageType::Message:
