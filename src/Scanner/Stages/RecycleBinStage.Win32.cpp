@@ -6,11 +6,6 @@
 
 #include <sddl.h>
 
-RecycleBinStage::RecycleBinStage(Scanner* scanner)
-	: RecycleBinStage(scanner)
-{
-}
-
 StageResult RecycleBinStage::Run()
 {
 	HANDLE token;
