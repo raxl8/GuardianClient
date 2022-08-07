@@ -1,33 +1,33 @@
 return {
     include = function()
-        includedirs { "include" }
+        includedirs "glfw/include"
     end,
     project = function()
         kind "StaticLib"
         language "C"
 
-        files {
-            "src/context.c",
-            "src/egl_context.h",
-            "src/egl_context.c",
-            "src/init.c",
-            "src/input.c",
-            "src/internal.h",
-            "src/mappings.h",
-            "src/monitor.c",
-            "src/osmesa_context.h",
-            "src/osmesa_context.c",
-            "src/vulkan.c",
-            "src/window.c",
+        files_prefix "glfw/src" {
+            "context.c",
+            "egl_context.h",
+            "egl_context.c",
+            "init.c",
+            "input.c",
+            "internal.h",
+            "mappings.h",
+            "monitor.c",
+            "osmesa_context.h",
+            "osmesa_context.c",
+            "vulkan.c",
+            "window.c",
         }
 
         if os.istarget('windows') then
             defines "_GLFW_WIN32"
-            files {
-                "src/wgl_context.h",
-                "src/wgl_context.c",
-                "src/win32_*.h",
-                "src/win32_*.c"
+            files_prefix "glfw/src" {
+                "wgl_context.h",
+                "wgl_context.c",
+                "win32_*.h",
+                "win32_*.c"
             }
         end
     end

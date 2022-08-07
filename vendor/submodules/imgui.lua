@@ -1,13 +1,17 @@
 return {
     include = function()
-        includedirs { ".", "backends" }
+        includedirs { "imgui", "imgui/backends" }
     end,
     project = function()
         kind "StaticLib"
         language "C++"
         cppdialect "C++17"
 
-        files { "*.h", "*.cpp" }
+        files_prefix "imgui" {
+            "*.h",
+            "*.cpp"
+        }
+        
         removefiles "imgui_demo.cpp"
     end
 }

@@ -1,11 +1,14 @@
 return {
     include = function()
-        includedirs { "include" }
+        includedirs "minhook/include"
     end,
     project = function()
         kind "StaticLib"
         language "C"
 
-        files { "src/**.h", "src/**.c" }
+        files_prefix "minhook/src" {
+            "**.h",
+            "**.c"
+        }
     end
 }

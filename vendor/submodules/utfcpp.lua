@@ -1,5 +1,5 @@
 return {
     include = function()
-        includedirs "source"
+        includedirs "utfcpp/source"
     end
 }

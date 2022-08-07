@@ -1,12 +1,15 @@
 return {
     include = function()
-        includedirs "include"
+        includedirs "mbedtls/include"
     end,
     project = function()
         kind "StaticLib"
         language "C"
 
-        includedirs "library"
-        files { "library/*.h", "library/*.c" }
+        includedirs "mbedtls/library"
+        files_prefix "mbedtls/library" {
+            "*.h",
+            "*.c"
+        }
     end
 }

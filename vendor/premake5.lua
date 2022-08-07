@@ -1,3 +1,13 @@
+function files_prefix(prefix)
+    return function(_files)
+        for k, v in ipairs(_files) do
+            _files[k] = prefix .. "/" .. v
+        end
+
+        return files(_files)
+    end
+end
+
 local submodules_list = {}
 for _, path in pairs(os.matchfiles("submodules/*.lua")) do
     local submodule = dofile(path)
@@ -13,22 +23,23 @@ function submodules(list)
         list = { list }
     end
 
+    local old_cwd = os.getcwd()
+    os.chdir(vendor_cwd .. "/submodules")
+
     for _, submodule in pairs(submodules_list) do
         for _, submodule_name in pairs(list) do
             if submodule.name == submodule_name then
-                local old_cwd = os.getcwd()
-                os.chdir(vendor_cwd .. "/submodules/" .. submodule.name)
-
                 submodule.include()
+
                 if submodule.project then
                     links(submodule.name)
                 end
-
-                os.chdir(old_cwd)
                 break
             end
         end
     end
+
+    os.chdir(old_cwd)
 end
 
 os.chdir("submodules") -- tidy up a bit generated files
@@ -39,13 +50,10 @@ for _, submodule in pairs(submodules_list) do
     if submodule.project then
         project(submodule.name)
 
-        local old_cwd = os.getcwd()
-        os.chdir(submodule.name)
+        warnings "Off"
         
         submodule.include()
         submodule.project()
-
-        os.chdir(old_cwd)
     end
 end
 
