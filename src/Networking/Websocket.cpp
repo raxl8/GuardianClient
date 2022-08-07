@@ -35,8 +35,8 @@ bool Websocket::SendPacket(PacketStream&& packet)
 	finalPacket.WriteBytes(packetData);
 
 	auto data = finalPacket.GetData();
-	m_Websocket.sendBinary(data);
-	return true;
+	auto sendInfo = m_Websocket.sendBinary(data);
+	return sendInfo.success;
 }
 
 void Websocket::OnMessage(const ix::WebSocketMessagePtr& message)
