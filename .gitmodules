@@ -13,3 +13,9 @@
 [submodule "vendor/submodules/fmt"]
 	path = vendor/submodules/fmt
 	url = https://github.com/fmtlib/fmt
+[submodule "vendor/submodules/mbedtls"]
+	path = vendor/submodules/mbedtls
+	url = https://github.com/Mbed-TLS/mbedtls
+[submodule "vendor/submodules/ixwebsocket"]
+	path = vendor/submodules/ixwebsocket
+	url = https://github.com/machinezone/IXWebSocket
