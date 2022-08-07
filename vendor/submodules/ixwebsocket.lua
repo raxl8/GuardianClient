@@ -12,11 +12,15 @@ return {
             "*.cpp"
         }
 
-        defines { "IXWEBSOCKET_USE_MBED_TLS", "IXWEBSOCKET_USE_MBED_TLS_MIN_VERSION_3" }
+        defines {
+            "IXWEBSOCKET_USE_TLS",
+            "IXWEBSOCKET_USE_MBED_TLS",
+            "IXWEBSOCKET_USE_MBED_TLS_MIN_VERSION_3"
+        }
         submodules "mbedtls"
 
         if os.istarget("windows") then
-            links "ws2_32"
+            links { "ws2_32", "crypt32" }
         end
     end
 }
