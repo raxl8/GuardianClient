@@ -1,15 +1,19 @@
 workspace "Guardian"
-    configurations { "Debug", "Release" }
+    configurations { "Debug", "Release", "Production" }
     platforms "x64"
     targetdir "bin/%{cfg.buildcfg}"
     objdir "obj/%{cfg.buildcfg}/%{prj.name}"
 
     filter "configurations:Debug"
-        defines "_DEBUG"
+        defines { "_DEBUG", "GDN_DEBUG" }
         symbols "On"
 
     filter "configurations:Release"
-        defines "NDEBUG"
+        defines { "NDEBUG", "GDN_RELEASE" }
+        optimize "On"
+
+    filter "configurations:Production"
+        defines { "NDEBUG", "GDN_PRODUCTION" }
         optimize "On"
 
 include "vendor"

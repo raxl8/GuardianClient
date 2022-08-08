@@ -2,7 +2,7 @@
 
 void FatalError()
 {
-#ifdef _DEBUG
+#ifdef GDN_DEBUG
 	__debugbreak();
 #endif
 

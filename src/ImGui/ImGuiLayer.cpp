@@ -8,7 +8,7 @@
 
 ImGuiLayer::ImGuiLayer(const UniquePtr<Window>& window)
 {
-#ifdef _DEBUG
+#ifdef GDN_DEBUG
 	IMGUI_CHECKVERSION();
 #endif
 
