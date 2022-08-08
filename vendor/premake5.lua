@@ -8,6 +8,16 @@ function files_prefix(prefix)
     end
 end
 
+function removefiles_prefix(prefix)
+    return function(_files)
+        for k, v in ipairs(_files) do
+            _files[k] = prefix .. "/" .. v
+        end
+
+        return removefiles(_files)
+    end
+end
+
 local submodules_list = {}
 for _, path in pairs(os.matchfiles("submodules/*.lua")) do
     local submodule = dofile(path)

@@ -12,6 +12,21 @@ return {
             "*.cpp"
         }
 
+        removefiles_prefix "ixwebsocket/ixwebsocket" {
+            "*HttpClient*.h",
+            "*HttpClient*.cpp",
+            "*HttpServer*.h",
+            "*HttpServer*.cpp",
+            "IXGetFreePort.h",
+            "IXGetFreePort.cpp",
+            "IXSocketAppleSSL.h",
+            "IXSocketAppleSSL.cpp",
+            "IXSocketOpenSSL.h",
+            "IXSocketOpenSSL.cpp",
+            "*Server*.h",
+            "*Server*.cpp"
+        }
+
         defines {
             "IXWEBSOCKET_USE_TLS",
             "IXWEBSOCKET_USE_MBED_TLS",
