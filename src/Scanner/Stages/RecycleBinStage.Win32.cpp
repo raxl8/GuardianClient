@@ -8,31 +8,47 @@
 
 StageResult RecycleBinStage::Run()
 {
-	HANDLE token;
-	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token))
+	HANDLE tokenHandle;
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &tokenHandle))
 		return GDN_STAGERESULT(ErrorContinue, "OpenProcessToken returned %d", GetLastError());
 
+	CallOnDtor closeTokenHandle(CloseHandle, tokenHandle);
+
 	auto userToken = (TOKEN_USER*)malloc(sizeof(TOKEN_USER));
+	if (!userToken)
+		return GDN_STAGERESULT(Error, "Could not allocate %d bytes", sizeof(TOKEN_USER));
+
 	DWORD size = 0;
-	if (!GetTokenInformation(token, TOKEN_INFORMATION_CLASS::TokenUser, nullptr, size, &size))
+	if (!GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS::TokenUser, nullptr, size, &size))
 	{
 		auto lastError = GetLastError();
 		if (lastError != ERROR_INSUFFICIENT_BUFFER)
+		{
+			free(userToken);
 			return GDN_STAGERESULT(Error, "GetTokenInformation returned %d", lastError);
+		}
+		
+		auto newUserToken = (TOKEN_USER*)realloc(userToken, size);
+		if (!newUserToken)
+			return GDN_STAGERESULT(Error, "Could not allocate %d bytes", size);
 
-		free(userToken);
-		userToken = (TOKEN_USER*)malloc(size);
+		userToken = newUserToken;
 	}
 
-	if (!GetTokenInformation(token, TOKEN_INFORMATION_CLASS::TokenUser, userToken, size, &size) || !userToken)
+	if (!GetTokenInformation(tokenHandle, TOKEN_INFORMATION_CLASS::TokenUser, userToken, size, &size))
+	{
+		free(userToken);
 		return GDN_STAGERESULT(ErrorContinue, "GetTokenInformation returned %d", GetLastError());
+	}
 
 	WCHAR* sidStr = nullptr;
-	BOOL succeeded = ConvertSidToStringSidW(userToken->User.Sid, &sidStr);
-	free(userToken);
-
-	if (!succeeded)
+	if (!ConvertSidToStringSidW(userToken->User.Sid, &sidStr))
+	{
+		free(userToken);
 		return GDN_STAGERESULT(ErrorContinue, "ConvertSidToStringSidW returned %d", GetLastError());
+	}
+
+	free(userToken);
 
 	std::wstring recycleBinPath = _wgetenv(L"SystemDrive");
 	recycleBinPath.append(L"\\$Recycle.Bin\\");
