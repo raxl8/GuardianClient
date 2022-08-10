@@ -15,8 +15,6 @@ return {
         removefiles_prefix "ixwebsocket/ixwebsocket" {
             "*HttpClient*.h",
             "*HttpClient*.cpp",
-            "*HttpServer*.h",
-            "*HttpServer*.cpp",
             "IXGetFreePort.h",
             "IXGetFreePort.cpp",
             "IXSocketAppleSSL.h",
