@@ -25,11 +25,7 @@ public:
 	template<typename T>
 	T Read(uint64_t offset = 0)
 	{
-		m_ReadCursor += offset;
-		if (!EnsureReadableSize(sizeof(T)))
-			return T{};
-
-		auto data = ReadBytes(sizeof(T));
+		auto data = ReadBytes(sizeof(T), offset);
 		if (data.size() != sizeof(T))
 			return T{};
 
