@@ -18,6 +18,11 @@ public:
 	{
 	}
 
+	PacketStream(std::vector<uint8_t>&& data)
+		: m_Data(std::move(data)), m_ReadCursor(0ULL), m_WriteCursor(0ULL)
+	{
+	}
+
 	inline const std::vector<uint8_t>& GetData() { return m_Data; }
 	inline uint64_t GetReadCursor() { return m_ReadCursor; }
 	inline uint64_t GetWriteCursor() { return m_WriteCursor; }
