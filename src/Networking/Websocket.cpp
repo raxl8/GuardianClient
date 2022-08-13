@@ -101,7 +101,8 @@ void Websocket::OnMessage(const ix::WebSocketMessagePtr& message)
 		std::vector<uint8_t> data(message->str.size());
 		std::memcpy(&data[0], &message->str[0], data.size());
 
-		HandlePacket(PacketStream(data));
+		// We move the buffer as we don't need it outside of this function
+		HandlePacket(PacketStream(std::move(data)));
 		break;
 	}
 	default:
