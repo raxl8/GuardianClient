@@ -23,9 +23,9 @@ public:
 	{
 	}
 
-	inline const std::vector<uint8_t>& GetData() const { return m_Data; }
-	inline uint64_t GetReadCursor() { return m_ReadCursor; }
-	inline uint64_t GetWriteCursor() { return m_WriteCursor; }
+	const std::vector<uint8_t>& GetData() const { return m_Data; }
+	uint64_t GetReadCursor() const { return m_ReadCursor; }
+	uint64_t GetWriteCursor() const  { return m_WriteCursor; }
 
 	template<typename T>
 	T Read(uint64_t offset = 0)

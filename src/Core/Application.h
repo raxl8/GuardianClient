@@ -14,8 +14,8 @@ public:
 
 	int Run();
 
-	inline const UniquePtr<UserInterface>& GetUserInterface() { return m_UserInterface; }
-	inline const UniquePtr<Scanner>& GetScanner() { return m_Scanner; }
+	const UniquePtr<UserInterface>& GetUserInterface() const { return m_UserInterface; }
+	const UniquePtr<Scanner>& GetScanner() const { return m_Scanner; }
 
 private:
 	UniquePtr<Websocket> m_Websocket;

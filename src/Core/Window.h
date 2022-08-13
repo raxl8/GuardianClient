@@ -15,7 +15,7 @@ public:
 	void Show();
 	void Hide();
 
-	inline GLFWwindow* GetNativeWindow() { return m_Window; }
+	GLFWwindow* GetNativeWindow() const { return m_Window; }
 
 private:
 	std::string m_Title;

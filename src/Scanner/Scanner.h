@@ -18,7 +18,7 @@ public:
 
 	bool Run();
 
-	inline ScanData& GetScanData() { return m_ScanData; }
+	ScanData& GetScanData() { return m_ScanData; }
 
 private:
 	ScanData m_ScanData;

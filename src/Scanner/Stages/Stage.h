@@ -52,7 +52,7 @@ public:
 
 	virtual StageResult Run() = 0;
 
-	inline std::string_view GetName() { return m_Name; }
+	std::string_view GetName() const { return m_Name; }
 
 protected:
 	Scanner* m_Scanner;
