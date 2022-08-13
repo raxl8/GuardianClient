@@ -26,7 +26,7 @@ static HookFunction hookFunction([]()
 
 					PacketStream packet;
 					packet.Write<PacketID>(PacketID::Heartbeat);
-					instance->SendPacket(std::move(packet));
+					instance->SendPacket(packet);
 				}
 			});
 

@@ -23,7 +23,7 @@ public:
 	{
 	}
 
-	inline const std::vector<uint8_t>& GetData() { return m_Data; }
+	inline const std::vector<uint8_t>& GetData() const { return m_Data; }
 	inline uint64_t GetReadCursor() { return m_ReadCursor; }
 	inline uint64_t GetWriteCursor() { return m_WriteCursor; }
 

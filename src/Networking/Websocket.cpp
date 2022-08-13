@@ -41,7 +41,7 @@ void Websocket::Start()
 		packet.Write<PacketID>(PacketID::Handshake);
 		packet.Write<uint16_t>(WEBSOCKET_PROTOCOL_VERSION);
 
-		SendPacket(std::move(packet));
+		SendPacket(packet);
 	});
 
 	m_Websocket.start();
@@ -69,16 +69,16 @@ bool Websocket::IsConnected()
 	return m_Websocket.getReadyState() == ix::ReadyState::Open;
 }
 
-bool Websocket::SendPacket(PacketStream&& packet)
+bool Websocket::SendPacket(const PacketStream& packet)
 {
 	PacketStream finalPacket;
-	auto packetData = packet.GetData();
+	const auto& packetData = packet.GetData();
 	auto size = (int)packetData.size();
 	finalPacket.Write(size);
 	finalPacket.WriteBytes(packetData);
 
-	auto data = finalPacket.GetData();
-	auto sendInfo = m_Websocket.sendBinary(data);
+	ix::IXWebSocketSendData sendData(finalPacket.GetData());
+	auto sendInfo = m_Websocket.sendBinary(sendData);
 	return sendInfo.success;
 }
 

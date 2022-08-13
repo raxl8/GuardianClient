@@ -20,7 +20,7 @@ public:
 	void Start();
 	void Stop();
 	bool IsConnected();
-	bool SendPacket(PacketStream&& packet);
+	bool SendPacket(const PacketStream& packet);
 
 	static Callback<Websocket*> OnInitializeInstance;
 	Callback<> OnConnect;
