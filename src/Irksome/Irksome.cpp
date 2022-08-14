@@ -32,7 +32,9 @@ static HookFunction hookFunction([]()
 				if (g_HeartbeatThread.joinable())
 				{
 					g_HeartbeatConditionVariable.notify_one();
-					g_HeartbeatThread.join();
+					// Don't try to join on current thread, would cause deadlock
+					if (g_HeartbeatThread.get_id() != std::this_thread::get_id())
+						g_HeartbeatThread.join();
 				}
 			});
 		});
