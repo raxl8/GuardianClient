@@ -137,12 +137,12 @@ void Websocket::HandlePacket(PacketStream&& packet)
 			break;
 		case ErrorID::Unknown:
 		default:
+			errorTitle = "Unknown Error";
+			errorDescription = "An unknown error occured, server returned an unknown error code.";
 			break;
 		}
 
-		if (!errorTitle.empty())
-			Instance<Application>::Get()->GetUserInterface()->DisplayError(errorTitle, errorDescription);
-
+		Instance<Application>::Get()->GetUserInterface()->DisplayError(errorTitle, errorDescription);
 		break;
 	}
 	case PacketID::Handshake:
