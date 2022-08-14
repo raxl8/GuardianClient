@@ -57,11 +57,7 @@ void Websocket::Start()
 
 void Websocket::Stop()
 {
-	bool shouldCallback = m_Websocket.getReadyState() != ix::ReadyState::Closed;
 	m_Websocket.stop();
-
-	if (shouldCallback)
-		OnDisconnect();
 }
 
 bool Websocket::IsConnected()
@@ -122,7 +118,6 @@ void Websocket::HandlePacket(PacketStream&& packet)
 	case PacketID::Error:
 	{
 		m_Websocket.close();
-		OnDisconnect();
 
 		std::string errorTitle, errorDescription;
 		auto errorID = packet.Read<ErrorID>();
