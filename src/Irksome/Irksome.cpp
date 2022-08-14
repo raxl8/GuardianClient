@@ -12,21 +12,18 @@ static HookFunction hookFunction([]()
 {
 	Websocket::OnInitializeInstance.Subscribe([](Websocket* instance)
 	{
-		instance->OnConnect.Subscribe([instance]()
+		instance->OnHandshaked.Subscribe([instance]()
 		{
 			g_HeartbeatThread = std::thread([instance]()
 			{
 				while (instance->IsConnected())
 				{
-					std::unique_lock lock(g_HeartbeatMutex);
-					g_HeartbeatConditionVariable.wait_for(lock, std::chrono::seconds(30));
-
-					if (!instance->IsConnected())
-						break;
-
 					PacketStream packet;
 					packet.Write<PacketID>(PacketID::Heartbeat);
 					instance->SendPacket(packet);
+
+					std::unique_lock lock(g_HeartbeatMutex);
+					g_HeartbeatConditionVariable.wait_for(lock, std::chrono::seconds(30));
 				}
 			});
 

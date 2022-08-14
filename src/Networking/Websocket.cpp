@@ -12,7 +12,7 @@
 Callback<Websocket*> Websocket::OnInitializeInstance;
 
 Websocket::Websocket(const std::string& url)
-	: m_State(WebsocketState::Handshaking)
+	: m_State(WebsocketState::Idle)
 {
 	if (!ix::initNetSystem())
 		FatalError();
@@ -146,7 +146,8 @@ void Websocket::HandlePacket(PacketStream&& packet)
 		break;
 	}
 	case PacketID::Handshake:
-		m_State = WebsocketState::Etablished;
+		m_State = WebsocketState::Handshaked;
+		OnHandshaked();
 		break;
 	default:
 		break;

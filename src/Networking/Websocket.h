@@ -7,8 +7,8 @@
 
 enum class WebsocketState
 {
-	Handshaking = 0,
-	Etablished,
+	Idle = 0,
+	Handshaked,
 };
 
 class Websocket
@@ -24,6 +24,7 @@ public:
 
 	static Callback<Websocket*> OnInitializeInstance;
 	Callback<> OnConnect;
+	Callback<> OnHandshaked;
 	Callback<> OnDisconnect;
 	Callback<const std::string&> OnError;
 
