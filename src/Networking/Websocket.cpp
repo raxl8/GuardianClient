@@ -22,6 +22,16 @@ Websocket::Websocket(const std::string& url)
 	m_Websocket.setOnMessageCallback(std::bind(&Websocket::OnMessage, this, std::placeholders::_1));
 	m_Websocket.disableAutomaticReconnection();
 
+	OnConnect.Subscribe([this]() {
+		m_ConnectCondition.notify_one();
+
+		PacketStream packet;
+		packet.Write<PacketID>(PacketID::Handshake);
+		packet.Write<uint16_t>(WEBSOCKET_PROTOCOL_VERSION);
+
+		SendPacket(packet);
+	});
+
 	OnInitializeInstance(this);
 }
 
@@ -34,16 +44,6 @@ Websocket::~Websocket()
 
 void Websocket::Start()
 {
-	OnConnect.Subscribe([this]() {
-		m_ConnectCondition.notify_one();
-
-		PacketStream packet;
-		packet.Write<PacketID>(PacketID::Handshake);
-		packet.Write<uint16_t>(WEBSOCKET_PROTOCOL_VERSION);
-
-		SendPacket(packet);
-	});
-
 	m_Websocket.start();
 
 	{
