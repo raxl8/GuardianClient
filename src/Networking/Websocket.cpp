@@ -7,7 +7,6 @@
 #include "Networking/ErrorID.h"
 
 #include <ixwebsocket/IXNetSystem.h>
-#include <ixwebsocket/IXUserAgent.h>
 
 Callback<Websocket*> Websocket::OnInitializeInstance;
 
