@@ -25,3 +25,6 @@
 [submodule "vendor/submodules/curl"]
 	path = vendor/submodules/curl
 	url = https://github.com/curl/curl
+[submodule "vendor/submodules/cpr"]
+	path = vendor/submodules/cpr
+	url = https://github.com/libcpr/cpr
