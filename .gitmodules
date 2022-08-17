@@ -22,3 +22,6 @@
 [submodule "vendor/submodules/nghttp2"]
 	path = vendor/submodules/nghttp2
 	url = https://github.com/nghttp2/nghttp2
+[submodule "vendor/submodules/curl"]
+	path = vendor/submodules/curl
+	url = https://github.com/curl/curl
