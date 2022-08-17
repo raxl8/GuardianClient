@@ -19,3 +19,6 @@
 [submodule "vendor/submodules/ixwebsocket"]
 	path = vendor/submodules/ixwebsocket
 	url = https://github.com/machinezone/IXWebSocket
+[submodule "vendor/submodules/nghttp2"]
+	path = vendor/submodules/nghttp2
+	url = https://github.com/nghttp2/nghttp2
