@@ -2,9 +2,19 @@
 
 #include "Core/Application.h"
 #include "Hooking/HookFunction.h"
+#include "Minidump/MinidumpClient.h"
+#include "Minidump/MinidumpServer.h"
 
 int RealMain(int argc, char* argv[])
 {
+#if GDN_PRODUCTION || 1
+	if (wcsstr(GetCommandLineW(), L"--crashpad-handler"))
+		return StartMinidumpServer(argc, argv);
+
+	if (!StartMinidumpClient())
+		return EXIT_FAILURE;
+#endif
+
 	HookFunction::RunAll();
 
 	auto application = new Application;
@@ -13,6 +23,8 @@ int RealMain(int argc, char* argv[])
 	auto exitCode = application->Run();
 
 	delete application;
+
+	CloseMinidumpClient();
 
 	return exitCode;
 }
@@ -29,7 +41,21 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	freopen_s(&dummyStream, "CONOUT$", "w", stderr);
 #endif
 
-	auto exitCode = RealMain(__argc, __argv);
+	auto argc = __argc;
+	auto argv = __wargv;
+
+	UniquePtr<char* []> utf8Argv(new char* [argc + 1]);
+	std::vector<std::string> storage;
+	storage.reserve(argc);
+
+	for (int i = 0; i < argc; ++i) {
+		storage.push_back(ToNarrow(argv[i]));
+		utf8Argv[i] = &storage[i][0];
+	}
+
+	utf8Argv[argc] = nullptr;
+
+	auto exitCode = RealMain(__argc, utf8Argv.get());
 
 #ifndef GDN_PRODUCTION
 	FreeConsole();
