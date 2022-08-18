@@ -7,10 +7,7 @@ static HookFunction* g_HookFunctions = nullptr;
 HookFunction::HookFunction(std::function<void()>&& function)
 	: m_Function(std::move(function)), m_Next(nullptr)
 {
-	if (g_HookFunctions)
-		g_HookFunctions->m_Next = this;
-
-	g_HookFunctions = this;
+	!g_HookFunctions ? g_HookFunctions = this : g_HookFunctions->m_Next = this;
 }
 
 void HookFunction::RunAll()
