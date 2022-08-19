@@ -7,7 +7,7 @@
 
 int RealMain(int argc, char* argv[])
 {
-#if GDN_PRODUCTION || 1
+#if defined(GDN_RELEASE) || 1
 	if (wcsstr(GetCommandLineW(), L"--crashpad-handler"))
 		return StartMinidumpServer(argc, argv);
 
@@ -32,7 +32,7 @@ int RealMain(int argc, char* argv[])
 #ifdef GDN_WINDOWS
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
-#ifndef GDN_PRODUCTION
+#ifndef GDN_RELEASE
 	AllocConsole();
 
 	FILE* dummyStream;
@@ -57,7 +57,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	auto exitCode = RealMain(__argc, utf8Argv.get());
 
-#ifndef GDN_PRODUCTION
+#ifndef GDN_RELEASE
 	FreeConsole();
 #endif
 
