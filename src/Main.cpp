@@ -7,7 +7,7 @@
 
 int RealMain(int argc, char* argv[])
 {
-#if defined(GDN_RELEASE) || 1
+#ifdef GDN_RELEASE
 	if (wcsstr(GetCommandLineW(), L"--crashpad-handler"))
 		return StartMinidumpServer(argc, argv);
 
