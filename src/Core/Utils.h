@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #define GDN_CONCAT(x, y) x ## y
 
 class CallOnDtor

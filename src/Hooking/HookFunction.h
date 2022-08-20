@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 class HookFunction
 {
 public:
