@@ -8,12 +8,11 @@
 #include <client/crash_report_database.h>
 #include <client/crashpad_client.h>
 #include <client/crashpad_info.h>
-#include <client/prune_crash_reports.h>
 #include <client/settings.h>
 #include <util/misc/uuid.h>
 #include <util/win/termination_codes.h>
 
-nlohmann::json g_Session;
+static nlohmann::json g_Session;
 
 void UploadSession(nlohmann::json& data)
 {
@@ -93,9 +92,8 @@ bool StartCrashpad()
 
 	crashpad::CrashpadClient::SetFirstChanceExceptionHandler(&CrashpadHandler);
 
-
-	crashpad::CrashpadInfo* crashpad_info = crashpad::CrashpadInfo::GetCrashpadInfo();
-	crashpad_info->set_system_crash_reporter_forwarding(crashpad::TriState::kDisabled);
+	crashpad::CrashpadInfo* crashpadInfo = crashpad::CrashpadInfo::GetCrashpadInfo();
+	crashpadInfo->set_system_crash_reporter_forwarding(crashpad::TriState::kDisabled);
 
 	return true;
 }

@@ -9,11 +9,10 @@
 #include "Core/Config.h"
 #include "Core/Error.h"
 #include "Core/Instance.h"
+#include "Core/Platform.h"
 #include "Core/Pointers.h"
 #include "Core/Utils.h"
 #include "Core/Version.h"
-
-#include "Core/Platform.h"
 
 #ifdef GDN_WINDOWS
 	#ifndef NOMINMAX

@@ -6,6 +6,8 @@
 
 int StartMinidumpServer(int argc, char* argv[])
 {
+	// Having extra arguments upsets Crashpad and we can't increase
+	// argv pointer as it needs argv[0] so we remap whole argv
 	int crashpadArgc = 0;
 	UniquePtr<char* []> crashpadArgv(new char* [argc + 1]);
 
