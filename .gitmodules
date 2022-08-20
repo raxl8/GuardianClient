@@ -39,4 +39,4 @@
 	url = https://github.com/chromium/mini_chromium
 [submodule "vendor/submodules/crashpad"]
 	path = vendor/submodules/crashpad
-	url = https://github.com/getsentry/crashpad
+	url = https://github.com/guardian-ac/crashpad
