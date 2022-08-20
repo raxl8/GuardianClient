@@ -14,5 +14,5 @@
 #define WEBSOCKET_PROTOCOL_VERSION 1
 
 #define SENTRY_URL "http://sentry.guardian.ac"
-#define SENTRY_PROJECT_ID 2
+#define SENTRY_PROJECT_ID "2"
 #define SENTRY_KEY "d44b37efca574c67af2c35d8b9e6e12d"

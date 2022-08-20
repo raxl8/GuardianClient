@@ -4,7 +4,6 @@
 
 #include <cpr/api.h>
 #include <nlohmann/json.hpp>
-#include <fmt/printf.h>
 #include <fmt/chrono.h>
 #include <client/crash_report_database.h>
 #include <client/crashpad_client.h>
@@ -24,13 +23,13 @@ void UploadSession(nlohmann::json& data)
 	bodyData << data.dump(-1, ' ', false, nlohmann::detail::error_handler_t::replace) << "\n";
 
 	cpr::Post(
-		cpr::Url{ fmt::sprintf("%s/api/%d/envelope/", SENTRY_URL, SENTRY_PROJECT_ID) },
+		cpr::Url{ SENTRY_URL "/api/" SENTRY_PROJECT_ID "/envelope/" },
 		cpr::Body{ bodyData.str() },
 		cpr::VerifySsl{ false },
 		cpr::Header{
 			{
 				"X-Sentry-Auth",
-				fmt::sprintf("Sentry sentry_version=7, sentry_key=%s", SENTRY_KEY)
+				"Sentry sentry_version=7, sentry_key=" SENTRY_KEY
 			}
 		},
 		cpr::Timeout{ 2500 }
@@ -68,6 +67,8 @@ bool StartCrashpad()
 		if (settings)
 			settings->SetUploadsEnabled(true);
 	}
+
+	std::string url = SENTRY_URL "/api/" SENTRY_PROJECT_ID "/minidump/?sentry_key=" SENTRY_KEY;
 	
 	std::map<std::string, std::string> annotations;
 	annotations["sentry[release]"] = "guardian-client@" BUILD_VERSION;
@@ -82,7 +83,7 @@ bool StartCrashpad()
 		handlerPath,
 		databasePath,
 		databasePath,
-		fmt::sprintf("%s/api/%d/minidump/?sentry_key=%s", SENTRY_URL, SENTRY_PROJECT_ID, SENTRY_KEY),
+		url,
 		annotations,
 		arguments,
 		true,
