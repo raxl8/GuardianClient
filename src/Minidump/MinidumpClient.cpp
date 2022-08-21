@@ -70,6 +70,8 @@ bool StartCrashpad()
 	std::string url = SENTRY_URL "/api/" SENTRY_PROJECT_ID "/minidump/?sentry_key=" SENTRY_KEY;
 	
 	std::map<std::string, std::string> annotations;
+	annotations["commit"] = BUILD_COMMIT;
+	annotations["version"] = BUILD_VERSION;
 	annotations["sentry[release]"] = "guardian-client@" BUILD_VERSION;
 	annotations["sentry[environment]"] = BUILD_CHANNEL;
 
