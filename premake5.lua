@@ -35,7 +35,8 @@ project "Guardian"
 
     if os.istarget('windows') then
         defines "_CRT_SECURE_NO_WARNINGS"
-        links "opengl32"
+        links { "opengl32", "comctl32" }
+        linkoptions "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\""
         submodules "minhook"
     else
         removefiles "src/**.Win32.cpp"
