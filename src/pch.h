@@ -6,6 +6,8 @@
 #include <string_view>
 #include <vector>
 
+#include "Core/BuildInfo.h"
+
 #include "Core/Config.h"
 #include "Core/Error.h"
 #include "Core/Instance.h"
