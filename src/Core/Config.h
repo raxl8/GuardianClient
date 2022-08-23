@@ -8,7 +8,7 @@
 #ifndef GDN_RELEASE
 #define WEBSOCKET_ENDPOINT "ws://localhost:9000"
 #else
-#define WEBSOCKET_ENDPOINT "wss://client.guardian.ac/"
+#define WEBSOCKET_ENDPOINT "wss://client.guardian.ac/" BUILD_CHANNEL
 #endif
 
 #define WEBSOCKET_PROTOCOL_VERSION 1
