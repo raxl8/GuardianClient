@@ -1,3 +1,4 @@
 #pragma once
 
-int StartMinidumpServer(int argc, char* argv[]);
+class CommandLine;
+int StartMinidumpServer(const CommandLine& commandLine);

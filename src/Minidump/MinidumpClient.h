@@ -1,4 +1,7 @@
 #pragma once
 
-bool StartMinidumpClient();
-void CloseMinidumpClient();
+struct ScopedMinidumpClient
+{
+	ScopedMinidumpClient();
+	~ScopedMinidumpClient();
+};

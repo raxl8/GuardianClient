@@ -2,6 +2,8 @@
 
 #include "MinidumpServer.h"
 
+#include "Core/CommandLine.h"
+
 #include <optional>
 #include <thread>
 #include <CommCtrl.h>
@@ -125,26 +127,27 @@ void OnUploadedReport(crashpad::CrashReportUploadThread::UploadResult result, co
 	tempCrashId = "";
 }
 
-int StartMinidumpServer(int argc, char* argv[])
+int StartMinidumpServer(const CommandLine& commandLine)
 {
+	const auto& args = commandLine.GetArgs();
+
 	// Having extra arguments upsets Crashpad and we can't increase
 	// argv pointer as it needs argv[0] so we remap whole argv
-	int crashpadArgc = 0;
-	UniquePtr<char* []> crashpadArgv(new char* [argc + 1]);
+	std::vector<char*> crashpadArgs;
+	crashpadArgs.reserve(args.size());
 
-	for (int i = 0; i < argc; ++i) {
-		if (strstr(argv[i], "--crashpad-handler"))
+	for (int i = 0; i < args.size(); i++)
+	{
+		if (args[i].find("--crashpad-handler") != std::string::npos)
 			continue;
 
-		crashpadArgv[crashpadArgc++] = argv[i];
+		crashpadArgs.push_back((char*)args[i].c_str());
 	}
-
-	crashpadArgv[argc] = nullptr;
 
 	crashpad::CrashReportExceptionHandler::SetOnCrashHandler(OnCrash);
 	crashpad::CrashReportUploadThread::SetOnUploadedReportHandler(OnUploadedReport);
 
-	auto exitCode = crashpad::HandlerMain(crashpadArgc, crashpadArgv.get(), nullptr);
+	auto exitCode = crashpad::HandlerMain(static_cast<int>(crashpadArgs.size()), &crashpadArgs[0], nullptr);
 
 	if (taskDialogThread.joinable())
 		taskDialogThread.join();

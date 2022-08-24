@@ -1,18 +1,19 @@
 #include "pch.h"
 
 #include "Core/Application.h"
+#include "Core/CommandLine.h"
+#include "Core/ScopedConsole.h"
 #include "Hooking/HookFunction.h"
 #include "Minidump/MinidumpClient.h"
 #include "Minidump/MinidumpServer.h"
 
-int RealMain(int argc, char* argv[])
+int RealMain(CommandLine commandLine)
 {
-#ifdef GDN_RELEASE
-	if (wcsstr(GetCommandLineW(), L"--crashpad-handler"))
-		return StartMinidumpServer(argc, argv);
+#ifndef GDN_RELEASE
+	if (commandLine.Contains("--crashpad-handler"))
+		return StartMinidumpServer(commandLine);
 
-	if (!StartMinidumpClient())
-		return EXIT_FAILURE;
+	ScopedMinidumpClient minidumpClient;
 #endif
 
 	HookFunction::RunAll();
@@ -24,8 +25,6 @@ int RealMain(int argc, char* argv[])
 
 	delete application;
 
-	CloseMinidumpClient();
-
 	return exitCode;
 }
 
@@ -33,39 +32,14 @@ int RealMain(int argc, char* argv[])
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
 #ifndef GDN_RELEASE
-	AllocConsole();
-
-	FILE* dummyStream;
-	freopen_s(&dummyStream, "CONIN$", "r", stdin);
-	freopen_s(&dummyStream, "CONOUT$", "w", stdout);
-	freopen_s(&dummyStream, "CONOUT$", "w", stderr);
+	ScopedConsole console;
 #endif
 
-	auto argc = __argc;
-	auto argv = __wargv;
-
-	UniquePtr<char* []> utf8Argv(new char* [argc + 1]);
-	std::vector<std::string> storage;
-	storage.reserve(argc);
-
-	for (int i = 0; i < argc; ++i) {
-		storage.push_back(ToNarrow(argv[i]));
-		utf8Argv[i] = &storage[i][0];
-	}
-
-	utf8Argv[argc] = nullptr;
-
-	auto exitCode = RealMain(__argc, utf8Argv.get());
-
-#ifndef GDN_RELEASE
-	FreeConsole();
-#endif
-
-	return exitCode;
+	return RealMain(CommandLine(__argc, __wargv));
 }
 #else
 int main(int argc, char* argv[])
 {
-	return RealMain(argc, argv);
+	return RealMain(CommandLine(argc, argv));
 }
 #endif
