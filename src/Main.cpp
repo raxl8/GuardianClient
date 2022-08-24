@@ -2,18 +2,18 @@
 
 #include "Core/Application.h"
 #include "Core/CommandLine.h"
-#include "Core/ScopedConsole.h"
+#include "Core/ConsoleWindow.h"
 #include "Hooking/HookFunction.h"
 #include "Minidump/MinidumpClient.h"
 #include "Minidump/MinidumpServer.h"
 
 int RealMain(CommandLine commandLine)
 {
-#ifndef GDN_RELEASE
+#ifdef GDN_RELEASE
 	if (commandLine.Contains("--crashpad-handler"))
 		return StartMinidumpServer(commandLine);
 
-	ScopedMinidumpClient minidumpClient;
+	MinidumpClient minidumpClient;
 #endif
 
 	HookFunction::RunAll();
@@ -32,7 +32,7 @@ int RealMain(CommandLine commandLine)
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
 #ifndef GDN_RELEASE
-	ScopedConsole console;
+	ConsoleWindow console;
 #endif
 
 	return RealMain(CommandLine(__argc, __wargv));

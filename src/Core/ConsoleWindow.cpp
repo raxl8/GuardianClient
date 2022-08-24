@@ -1,8 +1,8 @@
 #include "pch.h"
 
-#include "ScopedConsole.h"
+#include "ConsoleWindow.h"
 
-ScopedConsole::ScopedConsole()
+ConsoleWindow::ConsoleWindow()
 {
 	AllocConsole();
 
@@ -12,7 +12,7 @@ ScopedConsole::ScopedConsole()
 	freopen_s(&dummyStream, "CONOUT$", "w", stderr);
 }
 
-ScopedConsole::~ScopedConsole()
+ConsoleWindow::~ConsoleWindow()
 {
 	FreeConsole();
 }

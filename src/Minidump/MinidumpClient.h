@@ -1,7 +1,7 @@
 #pragma once
 
-struct ScopedMinidumpClient
+struct MinidumpClient
 {
-	ScopedMinidumpClient();
-	~ScopedMinidumpClient();
+	MinidumpClient();
+	~MinidumpClient();
 };

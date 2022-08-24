@@ -100,7 +100,7 @@ bool StartCrashpad()
 	return true;
 }
 
-ScopedMinidumpClient::ScopedMinidumpClient()
+MinidumpClient::MinidumpClient()
 {
 	crashpad::UUID uuid;
 	uuid.InitializeWithNew();
@@ -114,7 +114,7 @@ ScopedMinidumpClient::ScopedMinidumpClient()
 			{ "release", "guardian-client@" BUILD_VERSION },
 			{ "environment", BUILD_CHANNEL }
 		}}
-		});
+	});
 
 	UploadSession(g_Session);
 
@@ -127,7 +127,7 @@ ScopedMinidumpClient::ScopedMinidumpClient()
 	}
 }
 
-ScopedMinidumpClient::~ScopedMinidumpClient()
+MinidumpClient::~MinidumpClient()
 {
 	g_Session["status"] = "exited";
 	UploadSession(g_Session);
