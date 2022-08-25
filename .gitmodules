@@ -40,3 +40,6 @@
 [submodule "vendor/submodules/crashpad"]
 	path = vendor/submodules/crashpad
 	url = https://github.com/guardian-ac/crashpad
+[submodule "vendor/submodules/stb"]
+	path = vendor/submodules/stb
+	url = https://github.com/nothings/stb
