@@ -24,7 +24,10 @@ int Application::Run()
 		while (!m_Window->ShouldClose())
 		{
 			if (m_Window->IsMinimized())
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				continue;
+			}
 
 			m_ImGuiLayer->Begin();
 
