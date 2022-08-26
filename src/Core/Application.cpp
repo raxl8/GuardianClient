@@ -23,6 +23,9 @@ int Application::Run()
 
 		while (!m_Window->ShouldClose())
 		{
+			if (m_Window->IsMinimized())
+				continue;
+
 			m_ImGuiLayer->Begin();
 
 			m_UserInterface->RenderImGui();

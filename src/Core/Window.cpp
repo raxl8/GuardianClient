@@ -13,8 +13,14 @@ enum : WORD
 	DwmwaUseImmersiveDarkModeBefore20h1 = 19
 };
 
+static void IconifyCallback(GLFWwindow* window, int iconified)
+{
+	auto windowPtr = (Window*)glfwGetWindowUserPointer(window);
+	windowPtr->SetMinimized(iconified);
+}
+
 Window::Window(const std::string& title, int width, int height)
-	: m_Title(title)
+	: m_Title(title), m_Minimized(false)
 {
 	// We can init here as we know there's only going to be 1 window
 	glfwInit();
@@ -24,6 +30,9 @@ Window::Window(const std::string& title, int width, int height)
 	m_Window = glfwCreateWindow(width, height, m_Title.c_str(), NULL, NULL);
 	if (m_Window == NULL)
 		FatalError();
+
+	glfwSetWindowUserPointer(m_Window, this);
+	glfwSetWindowIconifyCallback(m_Window, IconifyCallback);
 
 #ifdef GDN_WINDOWS
 	DWORD useLightTheme;
@@ -77,4 +86,16 @@ void Window::Show()
 void Window::Hide()
 {
 	glfwHideWindow(m_Window);
+}
+
+void Window::SetMinimized(bool minimized)
+{
+	std::unique_lock lock(m_MinimizedMutex);
+	m_Minimized = minimized;
+}
+
+bool Window::IsMinimized()
+{
+	std::shared_lock lock(m_MinimizedMutex);
+	return m_Minimized;
 }
