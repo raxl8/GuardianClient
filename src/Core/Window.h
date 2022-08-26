@@ -9,6 +9,7 @@ public:
 	Window(const std::string& title, int width, int height);
 	~Window();
 
+	void SetRenderThread();
 	bool ShouldClose();
 	void Poll();
 	void Update();

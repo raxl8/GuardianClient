@@ -17,18 +17,30 @@ int Application::Run()
 
 	m_Window->Show();
 
+	m_RenderingThread = std::thread([this]
+	{
+		m_Window->SetRenderThread();
+
+		while (!m_Window->ShouldClose())
+		{
+			m_ImGuiLayer->Begin();
+
+			m_UserInterface->RenderImGui();
+
+			m_ImGuiLayer->End();
+
+			m_Window->Update();
+		}
+	});
+
 	while (!m_Window->ShouldClose())
 	{
 		m_Window->Poll();
 
-		m_ImGuiLayer->Begin();
-
-		m_UserInterface->RenderImGui();
-
-		m_ImGuiLayer->End();
-
-		m_Window->Update();
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
+
+	m_RenderingThread.join();
 
 	return EXIT_SUCCESS;
 }

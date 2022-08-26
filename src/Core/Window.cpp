@@ -39,15 +39,18 @@ Window::Window(const std::string& title, int width, int height)
 			|| SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkModeBefore20h1, &darkMode, sizeof(darkMode)));
 	}
 #endif
-
-	glfwMakeContextCurrent(m_Window);
-	glfwSwapInterval(1);
 }
 
 Window::~Window()
 {
 	glfwDestroyWindow(m_Window);
 	glfwTerminate();
+}
+
+void Window::SetRenderThread()
+{
+	glfwMakeContextCurrent(m_Window);
+	glfwSwapInterval(1);
 }
 
 bool Window::ShouldClose()

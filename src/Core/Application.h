@@ -23,6 +23,8 @@ private:
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;
 	UniquePtr<UserInterface> m_UserInterface;
 	UniquePtr<Scanner> m_Scanner;
+
+	std::thread m_RenderingThread;
 };
 
 DEFINE_INSTANCE_TYPE(Application);
