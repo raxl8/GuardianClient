@@ -11,5 +11,6 @@ public:
 	virtual void RenderImGui() override;
 
 private:
+	void* m_IconTexture;
 	std::string m_Title, m_Description;
 };

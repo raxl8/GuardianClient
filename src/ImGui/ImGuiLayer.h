@@ -5,7 +5,7 @@
 class ImGuiLayer
 {
 public:
-	ImGuiLayer(const UniquePtr<Window>& window);
+	ImGuiLayer(SharedPtr<Window> window);
 	~ImGuiLayer();
 
 	void Begin();

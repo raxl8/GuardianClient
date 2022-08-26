@@ -11,5 +11,6 @@ public:
 	virtual void RenderImGui() override;
 
 private:
+	void* m_LogoTexture;
 	char m_PINBuffer[PIN_SIZE + 1];
 };

@@ -6,17 +6,16 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl2.h>
 
-ImGuiLayer::ImGuiLayer(const UniquePtr<Window>& window)
+ImGuiLayer::ImGuiLayer(SharedPtr<Window> window)
 {
 #ifdef GDN_DEBUG
 	IMGUI_CHECKVERSION();
 #endif
 
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.IniFilename = nullptr;
 
-	ImGui::StyleColorsDark();
+	auto& io = ImGui::GetIO();
+	io.IniFilename = nullptr;
 
 	ImGui_ImplGlfw_InitForOpenGL(window->GetNativeWindow(), true);
 	ImGui_ImplOpenGL2_Init();

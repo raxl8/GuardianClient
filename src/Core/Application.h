@@ -19,7 +19,7 @@ public:
 
 private:
 	UniquePtr<Websocket> m_Websocket;
-	UniquePtr<Window> m_Window;
+	SharedPtr<Window> m_Window;
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;
 	UniquePtr<UserInterface> m_UserInterface;
 	UniquePtr<Scanner> m_Scanner;

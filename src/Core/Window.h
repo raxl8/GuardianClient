@@ -20,6 +20,8 @@ public:
 	void SetMinimized(bool minimized);
 	bool IsMinimized();
 
+	uint32_t LoadTexture(const void* data, const int size);
+
 	GLFWwindow* GetNativeWindow() const { return m_Window; }
 
 private:
