@@ -39,7 +39,7 @@ static bool ButtonEx(const char* label, const ImVec2& size_arg = ImVec2(0, 0), I
 
 	constexpr const auto easeInOutSine = [](float t)
 	{
-		return 0.5f * (1.f + sinf(std::numbers::pi * (t - 0.5f)));
+		return 0.5f * (1.f + sinf(std::numbers::pi_v<float> * (t - 0.5f)));
 	};
 
 	const auto animationSpeed = 8.f;
