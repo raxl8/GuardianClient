@@ -3,6 +3,7 @@
 #include "UserInterface/Views/View.h"
 
 #include <mutex>
+#include <tbb/concurrent_queue.h>
 
 class Window;
 struct ImFont;
@@ -14,7 +15,7 @@ public:
 	void PushTitleFont();
 	void PushRegularFont();
 	void RenderImGui();
-	void SetView(UniquePtr<View>&& newView);
+	void SetView(SharedPtr<View> newView);
 	void DisplayError(const std::string& title, const std::string& description);
 
 	SharedPtr<Window> GetWindow() { return m_Window; }
@@ -25,7 +26,9 @@ private:
 private:
 	SharedPtr<Window> m_Window;
 	ImFont* m_TitleFont, *m_RegularFont, *m_FooterFont;
+
+	tbb::concurrent_queue<std::function<void()>> m_RendererTasks;
 	bool m_CanChangeView;
 	std::mutex m_CurrentViewMutex;
-	UniquePtr<View> m_CurrentView;
+	SharedPtr<View> m_CurrentView;
 };

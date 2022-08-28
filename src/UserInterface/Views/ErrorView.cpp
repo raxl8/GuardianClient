@@ -9,7 +9,11 @@
 #include <images/error-icon.h>
 
 ErrorView::ErrorView(UserInterface* userInterface, const std::string& title, const std::string& description)
-	: m_Title(title), m_Description(description), View(userInterface)
+	: m_Title(title), m_Description(description), m_IconTexture(nullptr), View(userInterface)
+{
+}
+
+void ErrorView::OnLoad()
 {
 	m_IconTexture = (void*)(intptr_t)m_UserInterface->GetWindow()->LoadTexture(error_icon_compressed_data, error_icon_compressed_size);
 }

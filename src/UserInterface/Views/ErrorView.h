@@ -8,6 +8,7 @@ public:
 	ErrorView(UserInterface* userInterface, const std::string& title, const std::string& description);
 	~ErrorView() = default;
 
+	virtual void OnLoad() override;
 	virtual void RenderImGui() override;
 
 private:

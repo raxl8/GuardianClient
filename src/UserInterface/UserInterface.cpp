@@ -22,6 +22,8 @@ UserInterface::UserInterface(SharedPtr<Window> window)
 	m_TitleFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_Light_compressed_data, Roboto_Light_compressed_size, 30.f);
 	m_RegularFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_Medium_compressed_data, Roboto_Medium_compressed_size, 17.f);
 	m_FooterFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_Regular_compressed_data, Roboto_Regular_compressed_size, 17.f);
+
+	SetView(MakeShared<HomeView>(this));
 }
 
 void UserInterface::PushTitleFont()
@@ -36,8 +38,11 @@ void UserInterface::PushRegularFont()
 
 void UserInterface::RenderImGui()
 {
-	if (!m_CurrentView)
-		m_CurrentView = MakeUnique<HomeView>(this);
+	std::function<void()> task;
+	while (m_RendererTasks.try_pop(task))
+	{
+		task();
+	}
 
 	ImGui::SetNextWindowPos({ 0.f, 0.f });
 	ImGui::SetNextWindowSize({ WINDOW_WIDTH, WINDOW_HEIGHT });
@@ -56,20 +61,27 @@ void UserInterface::RenderImGui()
 	ImGui::End();
 }
 
-void UserInterface::SetView(UniquePtr<View>&& newView)
+void UserInterface::SetView(SharedPtr<View> newView)
 {
 	std::unique_lock lock(m_CurrentViewMutex);
 
-	if (m_CanChangeView)
-		m_CurrentView = std::move(newView);
+	m_CurrentView = std::move(newView);
+
+	SharedPtr<View> selfRef = m_CurrentView;
+	m_RendererTasks.push([selfRef]()
+	{
+		selfRef->OnLoad();
+	});
 }
 
 void UserInterface::DisplayError(const std::string& title, const std::string& description)
 {
-	std::unique_lock lock(m_CurrentViewMutex);
+	if (!m_CanChangeView)
+		return;
 
 	m_CanChangeView = false;
-	m_CurrentView = MakeUnique<ErrorView>(this, title, description);
+
+	SetView(MakeShared<ErrorView>(this, title, description));
 }
 
 void UserInterface::ApplyStyles()

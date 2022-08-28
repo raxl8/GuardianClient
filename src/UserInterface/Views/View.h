@@ -7,6 +7,7 @@ public:
 	View(UserInterface* userInterface);
 	virtual ~View() = default;
 
+	virtual void OnLoad() {}
 	virtual void RenderImGui() = 0;
 
 protected:

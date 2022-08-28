@@ -14,8 +14,6 @@ HomeView::HomeView(UserInterface* userInterface)
 	: View(userInterface)
 {
 	ZeroMemory(m_PINBuffer, sizeof(m_PINBuffer));
-
-	m_LogoTexture = (void*)(intptr_t)m_UserInterface->GetWindow()->LoadTexture(Logo_compressed_data, Logo_compressed_size);
 }
 
 static int DigitsTextFilter(ImGuiInputTextCallbackData* data)
@@ -24,6 +22,11 @@ static int DigitsTextFilter(ImGuiInputTextCallbackData* data)
 		return -1; // reject anything but digits
 
 	return 0;
+}
+
+void HomeView::OnLoad()
+{
+	m_LogoTexture = (void*)(intptr_t)m_UserInterface->GetWindow()->LoadTexture(Logo_compressed_data, Logo_compressed_size);
 }
 
 void HomeView::RenderImGui()
