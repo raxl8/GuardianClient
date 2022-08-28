@@ -78,6 +78,7 @@ void UserInterface::ApplyStyles()
 
 	auto& style = ImGui::GetStyle();
 	style.FrameRounding = 3.f;
+	style.WindowShadowSize = 0.f;
 
 	const ImColor accent = ImColor(109, 35, 225);
 	style.Colors[ImGuiCol_Button] = accent;
@@ -87,4 +88,5 @@ void UserInterface::ApplyStyles()
 	style.Colors[ImGuiCol_FrameBg] = ImColor(30, 30, 30);
 	style.Colors[ImGuiCol_Border] = accent;
 	style.Colors[ImGuiCol_WindowBg] = ImColor(24, 24, 24);
+	style.Colors[ImGuiCol_WindowShadow] = ImVec4(0.f, 0.f, 0.f, .5f);
 }
