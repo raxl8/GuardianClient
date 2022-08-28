@@ -43,3 +43,6 @@
 [submodule "vendor/submodules/stb"]
 	path = vendor/submodules/stb
 	url = https://github.com/nothings/stb
+[submodule "vendor/submodules/oneTBB"]
+	path = vendor/submodules/oneTBB
+	url = https://github.com/oneapi-src/oneTBB
