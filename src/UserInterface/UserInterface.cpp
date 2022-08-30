@@ -98,6 +98,7 @@ void UserInterface::ApplyStyles()
 	style.Colors[ImGuiCol_ButtonActive] = style.Colors[ImGuiCol_Button] + ImVec4(0.05f, 0.05f, 0.05f, 0.f);
 	style.Colors[ImGuiCol_TextSelectedBg] = style.Colors[ImGuiCol_Button] - ImVec4(0.1f, 0.1f, 0.1f, 0.5f);
 	style.Colors[ImGuiCol_FrameBg] = ImColor(30, 30, 30);
+	style.Colors[ImGuiCol_PlotHistogram] = accent;
 	style.Colors[ImGuiCol_Border] = accent;
 	style.Colors[ImGuiCol_WindowBg] = ImColor(24, 24, 24);
 	style.Colors[ImGuiCol_WindowShadow] = ImVec4(0.f, 0.f, 0.f, .5f);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <thread>
 #include <tuple>
 
 #include "Scanner/Stages/Stage.h"
@@ -10,17 +11,31 @@ struct ScanData
 	std::vector<std::tuple<std::string_view, StageException>> Exceptions;
 };
 
+enum class ScannerStatus
+{
+	Idle = 0,
+	InProgress,
+	FatalError,
+	Success
+};
+
 class Scanner
 {
 public:
 	Scanner();
-	~Scanner() = default;
+	~Scanner();
 
-	bool Run();
+	void Start();
 
-	ScanData& GetScanData() { return m_ScanData; }
+	int GetCurrentStage() { return m_CurrentStage; }
+	int GetStageCount() { return static_cast<int>(m_Stages.size()); }
+	ScanData& GetScanData() { return m_Data; }
+	ScannerStatus GetStatus() { return m_Status; }
 
 private:
-	ScanData m_ScanData;
+	std::thread m_ScanningThread;
+	int m_CurrentStage;
 	std::vector<UniquePtr<Stage>> m_Stages;
+	ScanData m_Data;
+	ScannerStatus m_Status;
 };

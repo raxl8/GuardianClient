@@ -15,14 +15,14 @@ public:
 	int Run();
 
 	const UniquePtr<UserInterface>& GetUserInterface() const { return m_UserInterface; }
-	const UniquePtr<Scanner>& GetScanner() const { return m_Scanner; }
+	SharedPtr<Scanner> GetScanner() { return m_Scanner; }
 
 private:
 	UniquePtr<Websocket> m_Websocket;
 	SharedPtr<Window> m_Window;
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;
 	UniquePtr<UserInterface> m_UserInterface;
-	UniquePtr<Scanner> m_Scanner;
+	SharedPtr<Scanner> m_Scanner;
 
 	std::thread m_RenderingThread;
 };
