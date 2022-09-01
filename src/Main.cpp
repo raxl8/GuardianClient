@@ -19,7 +19,6 @@ int RealMain(CommandLine commandLine)
 	HookFunction::RunAll();
 
 	auto application = new Application;
-	Instance<Application>::Set(application);
 
 	auto exitCode = application->Run();
 

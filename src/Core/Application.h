@@ -6,7 +6,7 @@
 #include "Scanner/Scanner.h"
 #include "UserInterface/UserInterface.h"
 
-class Application
+class Application : public Instance<Application>
 {
 public:
 	Application();

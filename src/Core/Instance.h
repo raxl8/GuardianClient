@@ -4,10 +4,13 @@ template<typename T>
 class Instance
 {
 public:
-	Instance() = default;
-	~Instance() = default;
+	Instance()
+	{
+		s_Instance = (T*)this;
+	}
 
-	static void Set(T* instance) { s_Instance = instance; }
+	virtual ~Instance() = default;
+
 	static T* Get() { return s_Instance; }
 
 private:
