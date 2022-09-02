@@ -3,9 +3,10 @@
 #include "ScanningView.h"
 
 #include "Core/Application.h"
+#include "ImGui/ImGuiCustom.h"
 #include "UserInterface/UserInterface.h"
 
-#include <imgui.h>
+#include <fmt/printf.h>
 
 ScanningView::ScanningView(UserInterface* userInterface)
 	: m_ProgressAnimating(false), m_ProgressAnimTime(0.f),
@@ -18,7 +19,18 @@ ScanningView::ScanningView(UserInterface* userInterface)
 
 void ScanningView::RenderImGui()
 {
-	ImGui::Dummy({ 0.f, WINDOW_HEIGHT / 2.5f });
+	ImGui::Dummy({ 0.f, WINDOW_HEIGHT / 7.f });
+
+	const auto cursorY = ImGui::GetCursorPosY();
+	for (int i = 0; i < 3; i++)
+	{
+		const auto radiusIncrease = 10.f; // Increase by 10 each spinner
+		const auto radius = 25.f + i * radiusIncrease; // Start at 25, increase by 10 each spinner
+		ImGui::SetCursorPos(ImVec2((WINDOW_WIDTH - radius * 2.f) / 2.f, cursorY - i * radiusIncrease));
+		ImGuardian::Spinner(fmt::sprintf("##spinner_%d", i).c_str(), radius, 3.f, 5.f + i, ImGui::GetColorU32(ImGuiCol_Button));
+	}
+
+	ImGui::Dummy({ 0.f, WINDOW_HEIGHT / 25.f });
 
 	m_UserInterface->PushTitleFont();
 
