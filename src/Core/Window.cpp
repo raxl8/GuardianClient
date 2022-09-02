@@ -2,6 +2,7 @@
 
 #include "Window.h"
 
+#include "Core/Application.h"
 #include "Core/Decompression.h"
 
 #include <glfw/glfw3.h>
@@ -12,13 +13,6 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
-// https://github.com/qt/qtbase/blob/15ccc7e499ac8dd1f75dfa75346d15c4b4d06324/src/plugins/platforms/windows/qwindowswindow.cpp#L3139
-enum : WORD
-{
-	DwmwaUseImmersiveDarkMode = 20,
-	DwmwaUseImmersiveDarkModeBefore20h1 = 19
-};
 
 static void IconifyCallback(GLFWwindow* window, int iconified)
 {
@@ -41,20 +35,7 @@ Window::Window(const std::string& title, int width, int height)
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetWindowIconifyCallback(m_Window, IconifyCallback);
 
-#ifdef GDN_WINDOWS
-	DWORD useLightTheme;
-	DWORD valueSize = sizeof(useLightTheme);
-	if (RegGetValueW(
-		HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", L"AppsUseLightTheme",
-		RRF_RT_REG_DWORD, nullptr, &useLightTheme, &valueSize) == ERROR_SUCCESS && useLightTheme == 0)
-	{
-		auto hwnd = glfwGetWin32Window(m_Window);
-		BOOL darkMode = TRUE;
-		bool _ =
-			SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkMode, &darkMode, sizeof(darkMode)))
-			|| SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkModeBefore20h1, &darkMode, sizeof(darkMode)));
-	}
-#endif
+	ChangeTitleBarTheme(Instance<Application>::Get()->IsDarkMode());
 }
 
 Window::~Window()
@@ -72,6 +53,24 @@ void Window::SetRenderThread()
 bool Window::ShouldClose()
 {
 	return glfwWindowShouldClose(m_Window);
+}
+
+// https://github.com/qt/qtbase/blob/15ccc7e499ac8dd1f75dfa75346d15c4b4d06324/src/plugins/platforms/windows/qwindowswindow.cpp#L3139
+enum : WORD
+{
+	DwmwaUseImmersiveDarkMode = 20,
+	DwmwaUseImmersiveDarkModeBefore20h1 = 19
+};
+
+void Window::ChangeTitleBarTheme(bool dark)
+{
+	#ifdef GDN_WINDOWS
+	auto hwnd = glfwGetWin32Window(m_Window);
+	BOOL toggle = dark;
+	bool _ =
+		SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkMode, &toggle, sizeof(toggle)))
+		|| SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkModeBefore20h1, &toggle, sizeof(toggle)));
+	#endif
 }
 
 void Window::Poll()

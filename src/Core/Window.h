@@ -13,6 +13,7 @@ public:
 
 	void SetRenderThread();
 	bool ShouldClose();
+	void ChangeTitleBarTheme(bool dark);
 	void Poll();
 	void Update();
 	void Show();

@@ -14,10 +14,13 @@ public:
 
 	int Run();
 
+	bool IsDarkMode() { return m_DarkMode; }
 	const UniquePtr<UserInterface>& GetUserInterface() const { return m_UserInterface; }
 	SharedPtr<Scanner> GetScanner() { return m_Scanner; }
 
 private:
+	bool m_DarkMode;
+
 	UniquePtr<Websocket> m_Websocket;
 	SharedPtr<Window> m_Window;
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;
