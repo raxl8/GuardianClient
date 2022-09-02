@@ -52,7 +52,7 @@ void ScanningView::RenderImGui()
 
 	constexpr const auto easeOutQuad = [](float t)
 	{
-		return 1.f - powf(2.f, -8.f * t);
+		return t * (2.f - t);
 	};
 
 	const auto currentStage = m_Scanner->GetCurrentStage();
@@ -84,7 +84,9 @@ void ScanningView::RenderImGui()
 	}
 
 	ImGui::SetCursorPosX((WINDOW_WIDTH - progressBarSize.x) / 2.f);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
 	ImGui::ProgressBar(m_Progress, progressBarSize);
+	ImGui::PopStyleColor();
 
 	ImGui::PopFont();
 }

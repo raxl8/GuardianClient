@@ -2,6 +2,7 @@
 
 #include "UserInterface.h"
 
+#include "Core/Application.h"
 #include "Core/Window.h"
 #include "Views/HomeView.h"
 #include "Views/ErrorView.h"
@@ -9,12 +10,13 @@
 #include <imgui.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui_internal.h>
+#include <fonts/Font-Awesome/fa-solid.h>
 #include <fonts/Roboto/Roboto-Light.h>
 #include <fonts/Roboto/Roboto-Medium.h>
 #include <fonts/Roboto/Roboto-Regular.h>
 
 UserInterface::UserInterface(SharedPtr<Window> window)
-	: m_Window(window)
+	: m_Window(window), m_DarkMode(Instance<Application>::Get()->IsDarkMode())
 {
 	ApplyStyles();
 
@@ -22,6 +24,13 @@ UserInterface::UserInterface(SharedPtr<Window> window)
 	m_TitleFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_Light_compressed_data, Roboto_Light_compressed_size, 30.f);
 	m_RegularFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_Medium_compressed_data, Roboto_Medium_compressed_size, 17.f);
 	m_FooterFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_Regular_compressed_data, Roboto_Regular_compressed_size, 17.f);
+
+	{
+		static ImWchar glyphRange[] = { 0xe005, 0xf8ff, 0 };
+		ImFontConfig config;
+		config.MergeMode = true;
+		m_IconFont = io.Fonts->AddFontFromMemoryCompressedTTF(fa_solid_compressed_data, fa_solid_compressed_size, 18.f, &config, glyphRange);
+	}
 
 	SetView(MakeShared<HomeView>(this));
 }
@@ -58,6 +67,32 @@ void UserInterface::RenderImGui()
 	ImGui::TextUnformatted(BUILD_DESCRIPTION);
 	ImGui::PopFont();
 
+	const auto themeButtonSize = ImVec2(
+		20.f, 20.f
+	);
+
+	const auto windowPadding = ImGui::GetStyle().WindowPadding;
+	ImGui::SetCursorPos(ImVec2(
+		WINDOW_WIDTH - themeButtonSize.x - windowPadding.x,
+		WINDOW_HEIGHT - themeButtonSize.y - windowPadding.y
+	));
+	
+	ImGui::PushFont(m_IconFont);
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(.0f, .0f));
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
+	if (ImGui::Button(m_DarkMode ? "\xef\x86\x85" : "\xef\x86\x86", themeButtonSize))
+	{
+		m_DarkMode = !m_DarkMode;
+		m_Window->ChangeTitleBarTheme(m_DarkMode);
+		ApplyStyles();
+	}
+
+	ImGui::PopStyleColor(3);
+	ImGui::PopStyleVar();
+	ImGui::PopFont();
+
 	ImGui::End();
 }
 
@@ -86,7 +121,7 @@ void UserInterface::DisplayError(const std::string& title, const std::string& de
 
 void UserInterface::ApplyStyles()
 {
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsDark(); // Default ImGui Colors
 
 	auto& style = ImGui::GetStyle();
 	style.FrameRounding = 3.f;
@@ -97,9 +132,10 @@ void UserInterface::ApplyStyles()
 	style.Colors[ImGuiCol_ButtonHovered] = style.Colors[ImGuiCol_Button] + ImVec4(0.1f, 0.1f, 0.1f, 0.f);
 	style.Colors[ImGuiCol_ButtonActive] = style.Colors[ImGuiCol_Button] + ImVec4(0.05f, 0.05f, 0.05f, 0.f);
 	style.Colors[ImGuiCol_TextSelectedBg] = style.Colors[ImGuiCol_Button] - ImVec4(0.1f, 0.1f, 0.1f, 0.5f);
-	style.Colors[ImGuiCol_FrameBg] = ImColor(30, 30, 30);
+	style.Colors[ImGuiCol_FrameBg] = m_DarkMode ? ImColor(30, 30, 30) : ImColor(180, 180, 180);
 	style.Colors[ImGuiCol_PlotHistogram] = accent;
 	style.Colors[ImGuiCol_Border] = accent;
-	style.Colors[ImGuiCol_WindowBg] = ImColor(24, 24, 24);
+	style.Colors[ImGuiCol_Text] = m_DarkMode ? style.Colors[ImGuiCol_Text] : ImVec4(0.f, 0.f, 0.f, 1.f);
+	style.Colors[ImGuiCol_WindowBg] = m_DarkMode ? ImColor(24, 24, 24) : ImColor(255, 255, 255);
 	style.Colors[ImGuiCol_WindowShadow] = ImVec4(0.f, 0.f, 0.f, .5f);
 }

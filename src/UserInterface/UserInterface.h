@@ -18,6 +18,7 @@ public:
 	void SetView(SharedPtr<View> newView);
 	void DisplayError(const std::string& title, const std::string& description);
 
+	bool IsDarkMode() { return m_DarkMode; }
 	SharedPtr<Window> GetWindow() { return m_Window; }
 
 private:
@@ -25,7 +26,8 @@ private:
 
 private:
 	SharedPtr<Window> m_Window;
-	ImFont* m_TitleFont, *m_RegularFont, *m_FooterFont;
+	bool m_DarkMode;
+	ImFont* m_TitleFont, *m_RegularFont, *m_FooterFont, *m_IconFont;
 
 	tbb::concurrent_queue<std::function<void()>> m_RendererTasks;
 	bool m_CanChangeView;

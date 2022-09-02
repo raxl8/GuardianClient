@@ -2,7 +2,7 @@
 
 #include "HomeView.h"
 
-#include "Core/Window.h"
+#include "Core/Application.h"
 #include "Core/Window.h"
 #include "ImGui/ImGuiCustom.h"
 #include "UserInterface/UserInterface.h"
@@ -51,12 +51,20 @@ void HomeView::RenderImGui()
 		ImGui::GetWindowDrawList()->AddShadowRect(cursor, cursor + ImVec2{ boxWidth, boxHeight }, ImGui::GetColorU32(ImGuiCol_WindowShadow), 15.f, ImVec2{3.f, 3.f});
 
 		ImGui::SetNextItemWidth(boxWidth);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Button) + ImVec4{ 0.2f, 0.2f, 0.2f, 0.f });
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 15.f, boxHeight / 2.f - ImGui::CalcTextSize("").y / 2.f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Button) + ImVec4{ 0.2f, 0.2f, 0.2f, 0.f });
+
+		if (!m_UserInterface->IsDarkMode())
+			ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(249, 249, 249));
+
 		ImGui::InputText("##pinInput", m_PINBuffer, std::size(m_PINBuffer), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CallbackCharFilter, DigitsTextFilter);
-		ImGui::PopStyleVar(2);
+
+		if (!m_UserInterface->IsDarkMode())
+			ImGui::PopStyleColor();
+
 		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(2);
 	}
 
 	ImGui::Dummy({ 0.f, boxHeight / 5.f });
@@ -65,8 +73,10 @@ void HomeView::RenderImGui()
 		ImGui::SetCursorPosX((WINDOW_WIDTH - boxWidth) / 2.f);
 		const auto cursor = ImGui::GetCursorPos();
 		ImGui::GetWindowDrawList()->AddShadowRect(cursor, cursor + ImVec2{ boxWidth, boxHeight }, ImGui::GetColorU32(ImGuiCol_WindowShadow), 15.f, ImVec2{ 3.f, 3.f });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
 		if (ImGuardian::Button("Start a Scan", ImVec2{ boxWidth, boxHeight }))
 			m_UserInterface->SetView(MakeShared<ScanningView>(m_UserInterface));
+		ImGui::PopStyleColor();
 	}
 
 	ImGui::PopFont();
