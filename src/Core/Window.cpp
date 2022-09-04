@@ -36,6 +36,15 @@ Window::Window(const std::string& title, int width, int height)
 	glfwSetWindowIconifyCallback(m_Window, IconifyCallback);
 
 	ChangeTitleBarTheme(Instance<Application>::Get()->IsDarkMode());
+
+#ifdef GDN_WINDOWS
+	auto hwnd = glfwGetWin32Window(m_Window);
+
+	WTA_OPTIONS opts;
+	opts.dwFlags = WTNCA_NODRAWICON | WTNCA_NODRAWCAPTION;
+	opts.dwMask = WTNCA_NODRAWICON | WTNCA_NODRAWCAPTION;
+	SetWindowThemeAttribute(hwnd, WTA_NONCLIENT, &opts, sizeof(opts));
+#endif GDN_WINDOWS
 }
 
 Window::~Window()
