@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <numbers>
 
-static bool ButtonEx(const char* label, const ImVec2& size_arg = ImVec2(0, 0), ImGuiButtonFlags flags = 0)
+static bool ButtonEx(const char* label, const ImVec2& size_arg = ImVec2(0, 0), bool invisible = false, ImGuiButtonFlags flags = 0)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems)
@@ -35,68 +35,73 @@ static bool ButtonEx(const char* label, const ImVec2& size_arg = ImVec2(0, 0), I
 	bool hovered, held;
 	bool pressed = ImGui::ButtonBehavior(bb, id, &hovered, &held, flags);
 
-	static std::unordered_map<ImGuiID, float> times;
-	if (times.find(id) == times.end())
-		times.emplace(id, 0.f);
-
-	constexpr const auto easeInOutSine = [](float t)
+	if (!invisible)
 	{
-		return 0.5f * (1.f + sinf(std::numbers::pi_v<float> * (t - 0.5f)));
-	};
+		static std::unordered_map<ImGuiID, float> times;
+		if (times.find(id) == times.end())
+			times.emplace(id, 0.f);
 
-	const auto animationSpeed = 8.f;
-
-	auto& time = times[id];
-	if (hovered && time < 1.f)
-	{
-		time += animationSpeed * g.IO.DeltaTime;
-	}
-	else if (!hovered && time > 0.f)
-	{
-		time -= animationSpeed * g.IO.DeltaTime;
-	}
-
-	time = std::clamp(time, 0.f, 1.f);
-
-	// Render
-
-	ImU32 col;
-	if (!held)
-	{
-		const auto baseColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
-		const auto hoveredColor = ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered);
-
-		auto currentColor = baseColor;
-
-		if (time > 0.f)
+		constexpr const auto easeInOutSine = [](float t)
 		{
-			auto factor = easeInOutSine(time);
-			auto diff = (hoveredColor - baseColor) * ImVec4(factor, factor, factor, 1.f);
-			currentColor.x += diff.x;
-			currentColor.y += diff.y;
-			currentColor.z += diff.z;
+			return 0.5f * (1.f + sinf(std::numbers::pi_v<float> *(t - 0.5f)));
+		};
+
+		const auto animationSpeed = 8.f;
+
+		auto& time = times[id];
+		if (hovered && time < 1.f)
+		{
+			time += animationSpeed * g.IO.DeltaTime;
+		}
+		else if (!hovered && time > 0.f)
+		{
+			time -= animationSpeed * g.IO.DeltaTime;
 		}
 
-		col = ImGui::GetColorU32(currentColor);
-	}
-	else
-	{
-		col = ImGui::GetColorU32(ImGuiCol_ButtonActive);
-	}
+		time = std::clamp(time, 0.f, 1.f);
 
-	ImGui::RenderNavHighlight(bb, id);
-	ImGui::RenderFrame(bb.Min, bb.Max, col, true, style.FrameRounding);
+		// Render
+
+		ImU32 col;
+		if (!held)
+		{
+			const auto baseColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+			const auto hoveredColor = ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered);
+
+			auto currentColor = baseColor;
+
+			if (time > 0.f)
+			{
+				auto factor = easeInOutSine(time);
+				auto diff = (hoveredColor - baseColor) * ImVec4(factor, factor, factor, 1.f);
+				currentColor.x += diff.x;
+				currentColor.y += diff.y;
+				currentColor.z += diff.z;
+			}
+
+			col = ImGui::GetColorU32(currentColor);
+		}
+		else
+		{
+			col = ImGui::GetColorU32(ImGuiCol_ButtonActive);
+		}
+
+		ImGui::RenderNavHighlight(bb, id);
+		ImGui::RenderFrame(bb.Min, bb.Max, col, true, style.FrameRounding);
+	}
 
 	if (g.LogEnabled)
 		ImGui::LogSetNextTextDecoration("[", "]");
-	ImGui::RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
+
+	auto padding = invisible ? ImVec2(0, 0) : style.FramePadding;
+	ImGui::RenderTextClipped(bb.Min + padding, bb.Max - padding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
 
 	return pressed;
 }
 
-bool ImGuardian::Button(const char* label, const ImVec2& size_arg /*= ImVec2(0, 0)*/)
+bool ImGuardian::Button(const char* label, const ImVec2& size_arg /*= ImVec2(0, 0)*/, bool invisible /*= false*/)
 {
-	return ButtonEx(label, size_arg, ImGuiButtonFlags_None);
+	return ButtonEx(label, size_arg, invisible, ImGuiButtonFlags_None);
 }
 
 static float bezier(float t)

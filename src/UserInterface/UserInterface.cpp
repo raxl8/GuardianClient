@@ -4,12 +4,10 @@
 
 #include "Core/Application.h"
 #include "Core/Window.h"
+#include "ImGui/ImGuiCustom.h"
 #include "Views/HomeView.h"
 #include "Views/ErrorView.h"
 
-#include <imgui.h>
-#define IMGUI_DEFINE_MATH_OPERATORS
-#include <imgui_internal.h>
 #include <fonts/Font-Awesome/fa-solid.h>
 #include <fonts/Roboto/Roboto-Light.h>
 #include <fonts/Roboto/Roboto-Medium.h>
@@ -62,36 +60,39 @@ void UserInterface::RenderImGui()
 
 	m_CurrentView->RenderImGui();
 
-	ImGui::PushFont(m_FooterFont);
-	ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(BUILD_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
-	ImGui::TextUnformatted(BUILD_DESCRIPTION);
-	ImGui::PopFont();
-
-	const auto themeButtonSize = ImVec2(
-		20.f, 20.f
-	);
-
-	const auto windowPadding = ImGui::GetStyle().WindowPadding;
-	ImGui::SetCursorPos(ImVec2(
-		WINDOW_WIDTH - themeButtonSize.x - windowPadding.x,
-		WINDOW_HEIGHT - themeButtonSize.y - windowPadding.y
-	));
-	
-	ImGui::PushFont(m_IconFont);
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(.0f, .0f));
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(.0f, .0f, .0f, .0f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(.0f, .0f, .0f, .0f));
-	if (ImGui::Button(m_DarkMode ? "\xef\x86\x85" : "\xef\x86\x86", themeButtonSize))
 	{
-		m_DarkMode = !m_DarkMode;
-		m_Window->ChangeTitleBarTheme(m_DarkMode);
-		ApplyStyles();
-	}
+		ImGui::PushFont(m_FooterFont);
 
-	ImGui::PopStyleColor(3);
-	ImGui::PopStyleVar();
-	ImGui::PopFont();
+		ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(BUILD_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
+		ImGui::TextUnformatted(BUILD_DESCRIPTION);
+
+		ImGui::PopFont();
+	}
+	
+	{
+		ImGui::PushFont(m_IconFont);
+
+		const auto themeButtonSize = ImVec2(
+			19.f, 19.f
+		);
+
+		const auto windowPadding = ImGui::GetStyle().WindowPadding;
+		ImGui::SetCursorPos(ImVec2(
+			WINDOW_WIDTH - themeButtonSize.x - windowPadding.x,
+			WINDOW_HEIGHT - themeButtonSize.y - windowPadding.y
+		));
+
+		const auto sunIcon = "\xef\x86\x85";
+		const auto moonIcon = "\xef\x86\x86";
+		if (ImGuardian::Button(m_DarkMode ? sunIcon : moonIcon, themeButtonSize, true))
+		{
+			m_DarkMode = !m_DarkMode;
+			m_Window->ChangeTitleBarTheme(m_DarkMode);
+			ApplyStyles();
+		}
+
+		ImGui::PopFont();
+	}
 
 	ImGui::End();
 }
