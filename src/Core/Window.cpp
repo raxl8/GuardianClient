@@ -35,8 +35,6 @@ Window::Window(const std::string& title, int width, int height)
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetWindowIconifyCallback(m_Window, IconifyCallback);
 
-	ChangeTitleBarTheme(Instance<Application>::Get()->IsDarkMode());
-
 #ifdef GDN_WINDOWS
 	auto hwnd = glfwGetWin32Window(m_Window);
 
@@ -64,22 +62,25 @@ bool Window::ShouldClose()
 	return glfwWindowShouldClose(m_Window);
 }
 
-// https://github.com/qt/qtbase/blob/15ccc7e499ac8dd1f75dfa75346d15c4b4d06324/src/plugins/platforms/windows/qwindowswindow.cpp#L3139
-enum : WORD
-{
-	DwmwaUseImmersiveDarkMode = 20,
-	DwmwaUseImmersiveDarkModeBefore20h1 = 19
-};
-
 void Window::ChangeTitleBarTheme(bool dark)
 {
-	#ifdef GDN_WINDOWS
-	auto hwnd = glfwGetWin32Window(m_Window);
-	BOOL toggle = dark;
-	bool _ =
-		SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkMode, &toggle, sizeof(toggle)))
-		|| SUCCEEDED(DwmSetWindowAttribute(hwnd, DwmwaUseImmersiveDarkModeBefore20h1, &toggle, sizeof(toggle)));
-	#endif
+#ifdef GDN_WINDOWS
+	if (IsMinimumWindows10())
+	{
+		auto hwnd = glfwGetWin32Window(m_Window);
+		// https://github.com/qt/qtbase/blob/15ccc7e499ac8dd1f75dfa75346d15c4b4d06324/src/plugins/platforms/windows/qwindowswindow.cpp#L3139
+		const auto DwmaUseImmersiveDarkMode = IsMinimumWindows10Build(19041) ? 20 : 19;
+		BOOL toggle = dark;
+		DwmSetWindowAttribute(hwnd, DwmaUseImmersiveDarkMode, &toggle, sizeof(toggle));
+
+		if (!IsMinimumWindows11())
+		{
+			// HACKHACK: Windows 10 only updates title bar on window creation
+			ShowWindow(hwnd, SW_HIDE);
+			ShowWindow(hwnd, SW_SHOW);
+		}
+	}
+#endif
 }
 
 void Window::Poll()
@@ -94,6 +95,8 @@ void Window::Update()
 
 void Window::Show()
 {
+	ChangeTitleBarTheme(Instance<Application>::Get()->IsDarkMode());
+
 	glfwShowWindow(m_Window);
 }
 
