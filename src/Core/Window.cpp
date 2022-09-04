@@ -73,7 +73,13 @@ void Window::ChangeTitleBarTheme(bool dark)
 		BOOL toggle = dark;
 		DwmSetWindowAttribute(hwnd, DwmaUseImmersiveDarkMode, &toggle, sizeof(toggle));
 
-		if (!IsMinimumWindows11())
+		if (IsMinimumWindows11())
+		{
+			const auto DwmaCaptionColor = 35;
+			COLORREF color = dark ? 0x181818 : 0xFFFFFF;
+			DwmSetWindowAttribute(hwnd, DwmaCaptionColor, &color, sizeof(color));
+		}
+		else
 		{
 			// HACKHACK: Windows 10 only updates title bar on window creation
 			ShowWindow(hwnd, SW_HIDE);
