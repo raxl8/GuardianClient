@@ -91,7 +91,7 @@ void Window::ChangeTitleBarTheme(bool dark)
 
 void Window::Poll()
 {
-	glfwPollEvents();
+	glfwWaitEvents();
 }
 
 void Window::Update()
