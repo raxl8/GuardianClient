@@ -26,8 +26,8 @@ public:
 	GLFWwindow* GetNativeWindow() const { return m_Window; }
 
 private:
+	std::string m_Title;
 	std::shared_mutex m_MinimizedMutex;
 	bool m_Minimized;
-	std::string m_Title;
 	GLFWwindow* m_Window;
 };

@@ -89,7 +89,6 @@ void Window::Poll()
 
 void Window::Update()
 {
-	glfwMakeContextCurrent(m_Window);
 	glfwSwapBuffers(m_Window);
 }
 
