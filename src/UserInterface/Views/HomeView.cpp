@@ -47,7 +47,7 @@ void HomeView::RenderImGui()
 
 	{
 		ImGui::SetCursorPosX((WINDOW_WIDTH - boxWidth) / 2.f);
-		const auto cursor = ImGui::GetCursorPos();
+		const auto cursor = ImGui::GetCurrentWindow()->Pos + ImGui::GetCursorPos();
 		ImGui::GetWindowDrawList()->AddShadowRect(cursor, cursor + ImVec2{ boxWidth, boxHeight }, ImGui::GetColorU32(ImGuiCol_WindowShadow), 15.f, ImVec2{3.f, 3.f});
 
 		ImGui::SetNextItemWidth(boxWidth);
@@ -71,7 +71,7 @@ void HomeView::RenderImGui()
 
 	{
 		ImGui::SetCursorPosX((WINDOW_WIDTH - boxWidth) / 2.f);
-		const auto cursor = ImGui::GetCursorPos();
+		const auto cursor = ImGui::GetCurrentWindow()->Pos + ImGui::GetCursorPos();
 		ImGui::GetWindowDrawList()->AddShadowRect(cursor, cursor + ImVec2{ boxWidth, boxHeight }, ImGui::GetColorU32(ImGuiCol_WindowShadow), 15.f, ImVec2{ 3.f, 3.f });
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
 		if (ImGuardian::Button("Start a Scan", ImVec2{ boxWidth, boxHeight }))
