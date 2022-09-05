@@ -2,10 +2,15 @@
 
 #include "Core/Application.h"
 #include "Core/CommandLine.h"
+
+#ifndef GDN_RELEASE
 #include "Core/ConsoleWindow.h"
-#include "Hooking/HookFunction.h"
+#else
 #include "Minidump/MinidumpClient.h"
 #include "Minidump/MinidumpServer.h"
+#endif
+
+#include "Hooking/HookFunction.h"
 
 int RealMain(CommandLine commandLine)
 {
