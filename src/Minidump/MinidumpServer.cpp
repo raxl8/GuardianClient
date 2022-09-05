@@ -5,7 +5,6 @@
 #include "Core/CommandLine.h"
 
 #include <optional>
-#include <thread>
 #include <CommCtrl.h>
 #include <shellapi.h>
 

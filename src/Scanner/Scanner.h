@@ -1,6 +1,5 @@
 #pragma once
 
-#include <thread>
 #include <tuple>
 
 #include "Scanner/Stages/Stage.h"
