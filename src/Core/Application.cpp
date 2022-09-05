@@ -5,6 +5,13 @@
 Application::Application()
 	: m_DarkMode(true)
 {
+	m_Websocket = MakeUnique<Websocket>(WEBSOCKET_ENDPOINT);
+	m_Renderer = MakeUnique<Renderer>();
+	m_Window = MakeUnique<Window>(PRODUCT_NAME, WINDOW_WIDTH, WINDOW_HEIGHT);
+	m_ImGuiLayer = MakeUnique<ImGuiLayer>(m_Window.get());
+	m_Scanner = MakeUnique<Scanner>();
+	m_UserInterface = MakeUnique<UserInterface>();
+
 #ifdef GDN_WINDOWS
 	DWORD useLightTheme;
 	DWORD valueSize = sizeof(useLightTheme);
@@ -12,12 +19,6 @@ Application::Application()
 		HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", L"AppsUseLightTheme",
 		RRF_RT_REG_DWORD, nullptr, &useLightTheme, &valueSize) == ERROR_SUCCESS && useLightTheme == 0;
 #endif
-
-	m_Websocket = MakeUnique<Websocket>(WEBSOCKET_ENDPOINT);
-	m_Window = MakeShared<Window>(PRODUCT_NAME, WINDOW_WIDTH, WINDOW_HEIGHT);
-	m_ImGuiLayer = MakeUnique<ImGuiLayer>(m_Window);
-	m_Scanner = MakeShared<Scanner>();
-	m_UserInterface = MakeUnique<UserInterface>(m_Window);
 }
 
 int Application::Run()
@@ -38,6 +39,8 @@ int Application::Run()
 				continue;
 			}
 
+			m_Renderer->OnNewFrame();
+
 			m_ImGuiLayer->Begin();
 
 			m_UserInterface->RenderImGui();
@@ -56,4 +59,12 @@ int Application::Run()
 	m_RenderingThread.join();
 
 	return EXIT_SUCCESS;
+}
+
+void Application::SetDarkMode(bool enabled)
+{
+	m_DarkMode = enabled;
+
+	m_Window->ChangeTitleBarTheme(enabled);
+	m_UserInterface->SetDarkMode(enabled);
 }

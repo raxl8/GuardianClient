@@ -3,7 +3,6 @@
 #include "UserInterface.h"
 
 #include "Core/Application.h"
-#include "Core/Window.h"
 #include "ImGui/ImGuiCustom.h"
 #include "Views/HomeView.h"
 #include "Views/ErrorView.h"
@@ -13,9 +12,11 @@
 #include <fonts/Roboto/Roboto-Medium.h>
 #include <fonts/Roboto/Roboto-Regular.h>
 
-UserInterface::UserInterface(SharedPtr<Window> window)
-	: m_Window(window), m_DarkMode(Instance<Application>::Get()->IsDarkMode())
+UserInterface::UserInterface()
+	: m_DisplayingError(false)
 {
+	m_DarkMode = Instance<Application>::Get()->IsDarkMode();
+
 	ApplyStyles();
 
 	auto& io = ImGui::GetIO();
@@ -45,12 +46,6 @@ void UserInterface::PushRegularFont()
 
 void UserInterface::RenderImGui()
 {
-	std::function<void()> task;
-	while (m_RendererTasks.try_pop(task))
-	{
-		task();
-	}
-
 	ImGui::SetNextWindowPos({ 0.f, 0.f });
 	ImGui::SetNextWindowSize({ WINDOW_WIDTH, WINDOW_HEIGHT });
 
@@ -87,8 +82,7 @@ void UserInterface::RenderImGui()
 		if (ImGuardian::Button(m_DarkMode ? sunIcon : moonIcon, themeButtonSize, true))
 		{
 			m_DarkMode = !m_DarkMode;
-			m_Window->ChangeTitleBarTheme(m_DarkMode);
-			ApplyStyles();
+			Instance<Application>::Get()->SetDarkMode(m_DarkMode);
 		}
 
 		ImGui::PopFont();
@@ -104,20 +98,27 @@ void UserInterface::SetView(SharedPtr<View> newView)
 	m_CurrentView = std::move(newView);
 
 	SharedPtr<View> selfRef = m_CurrentView;
-	m_RendererTasks.push([selfRef]()
+	auto renderer = Instance<Application>::Get()->GetRenderer();
+	renderer->EnqueueTask([selfRef, renderer]()
 	{
-		selfRef->OnLoad();
+		selfRef->OnLoad(renderer);
 	});
 }
 
 void UserInterface::DisplayError(const std::string& title, const std::string& description)
 {
-	if (!m_CanChangeView)
+	if (m_DisplayingError)
 		return;
 
-	m_CanChangeView = false;
+	m_DisplayingError = true;
 
 	SetView(MakeShared<ErrorView>(this, title, description));
+}
+
+void UserInterface::SetDarkMode(bool enabled)
+{
+	m_DarkMode = enabled;
+	ApplyStyles();
 }
 
 void UserInterface::ApplyStyles()

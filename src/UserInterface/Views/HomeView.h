@@ -8,7 +8,7 @@ public:
 	HomeView(UserInterface* userInterface);
 	~HomeView() = default;
 
-	virtual void OnLoad() override;
+	virtual void OnLoad(Renderer* renderer) override;
 	virtual void RenderImGui() override;
 
 private:

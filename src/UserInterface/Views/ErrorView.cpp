@@ -2,7 +2,6 @@
 
 #include "ErrorView.h"
 
-#include "Core/Window.h"
 #include "UserInterface/UserInterface.h"
 
 #include <imgui.h>
@@ -13,9 +12,9 @@ ErrorView::ErrorView(UserInterface* userInterface, const std::string& title, con
 {
 }
 
-void ErrorView::OnLoad()
+void ErrorView::OnLoad(Renderer* renderer)
 {
-	m_IconTexture = (void*)(intptr_t)m_UserInterface->GetWindow()->LoadTexture(error_icon_compressed_data, error_icon_compressed_size);
+	m_IconTexture = renderer->LoadTexture(error_icon_compressed_data, error_icon_compressed_size);
 }
 
 void ErrorView::RenderImGui()

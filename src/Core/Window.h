@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/Callback.h"
-
 #include <shared_mutex>
 
 struct GLFWwindow;
@@ -21,9 +19,7 @@ public:
 	void SetMinimized(bool minimized);
 	bool IsMinimized();
 
-	uint32_t LoadTexture(const void* data, const int size);
-
-	GLFWwindow* GetNativeWindow() const { return m_Window; }
+	auto GetNativeWindow() const { return m_Window; }
 
 private:
 	std::string m_Title;

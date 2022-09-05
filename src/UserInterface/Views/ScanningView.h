@@ -13,7 +13,7 @@ public:
 	virtual void RenderImGui() override;
 
 private:
-	SharedPtr<Scanner> m_Scanner;
+	Scanner* m_Scanner;
 	int m_StageCount;
 	bool m_ProgressAnimating;
 	float m_ProgressAnimTime;

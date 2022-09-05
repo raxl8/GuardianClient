@@ -3,7 +3,6 @@
 #include "HomeView.h"
 
 #include "Core/Application.h"
-#include "Core/Window.h"
 #include "ImGui/ImGuiCustom.h"
 #include "UserInterface/UserInterface.h"
 #include "UserInterface/Views/ScanningView.h"
@@ -16,17 +15,17 @@ HomeView::HomeView(UserInterface* userInterface)
 	ZeroMemory(m_PINBuffer, sizeof(m_PINBuffer));
 }
 
+void HomeView::OnLoad(Renderer* renderer)
+{
+	m_LogoTexture = renderer->LoadTexture(Logo_compressed_data, Logo_compressed_size);
+}
+
 static int DigitsTextFilter(ImGuiInputTextCallbackData* data)
 {
 	if ('0' > data->EventChar || data->EventChar > '9')
 		return -1; // reject anything but digits
 
 	return 0;
-}
-
-void HomeView::OnLoad()
-{
-	m_LogoTexture = (void*)(intptr_t)m_UserInterface->GetWindow()->LoadTexture(Logo_compressed_data, Logo_compressed_size);
 }
 
 void HomeView::RenderImGui()

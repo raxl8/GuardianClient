@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Core/Window.h"
-
+class Window;
 class ImGuiLayer
 {
 public:
-	ImGuiLayer(SharedPtr<Window> window);
+	ImGuiLayer(Window* window);
 	~ImGuiLayer();
 
 	void Begin();

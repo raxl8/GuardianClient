@@ -2,11 +2,12 @@
 
 #include "ImGuiLayer.h"
 
-#include <imgui.h>
+#include "Core/Window.h"
+
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl2.h>
 
-ImGuiLayer::ImGuiLayer(SharedPtr<Window> window)
+ImGuiLayer::ImGuiLayer(Window* window)
 {
 #ifdef GDN_DEBUG
 	IMGUI_CHECKVERSION();

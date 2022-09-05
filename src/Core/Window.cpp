@@ -3,16 +3,15 @@
 #include "Window.h"
 
 #include "Core/Application.h"
-#include "Core/Decompression.h"
 
 #include <glfw/glfw3.h>
+
+#ifdef GDN_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <glfw/glfw3native.h>
+#endif
 
 #include <dwmapi.h>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 
 static void IconifyCallback(GLFWwindow* window, int iconified)
 {
@@ -121,37 +120,4 @@ bool Window::IsMinimized()
 {
 	std::shared_lock lock(m_MinimizedMutex);
 	return m_Minimized;
-}
-
-GLuint Window::LoadTexture(const void* data, const int size)
-{
-	auto decompressLength = stb_decompress_length((const uint8_t*)data);
-	auto decompressedBuffer = new uint8_t[decompressLength];
-	stb_decompress(decompressedBuffer, (const uint8_t*)data, size);
-
-	int imageWidth = 0;
-	int imageHeight = 0;
-	stbi_uc* imageData = stbi_load_from_memory(decompressedBuffer, decompressLength, &imageWidth, &imageHeight, NULL, 4);
-
-	delete[] decompressedBuffer;
-
-	if (imageData == NULL)
-		return NULL;
-
-	GLuint imageTexture;
-	glGenTextures(1, &imageTexture);
-	glBindTexture(GL_TEXTURE_2D, imageTexture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-
-	stbi_image_free(imageData);
-
-	return imageTexture;
 }
