@@ -11,10 +11,10 @@ enum class StageStatus
 
 struct StageException
 {
-	std::string Message;
-	const char* Function;
-	const char* File;
-	int Line;
+	std::string Message = "";
+	const char* Function = "";
+	const char* File = "";
+	int Line = 0;
 };
 
 struct StageResult

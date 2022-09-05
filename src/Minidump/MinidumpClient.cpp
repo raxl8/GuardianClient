@@ -7,7 +7,6 @@
 #include <fmt/chrono.h>
 #include <client/crash_report_database.h>
 #include <client/crashpad_client.h>
-#include <client/crashpad_info.h>
 #include <client/settings.h>
 #include <util/misc/uuid.h>
 #include <util/win/termination_codes.h>
@@ -93,9 +92,6 @@ bool StartCrashpad()
 		return false;
 
 	crashpad::CrashpadClient::SetFirstChanceExceptionHandler(&CrashpadHandler);
-
-	crashpad::CrashpadInfo* crashpadInfo = crashpad::CrashpadInfo::GetCrashpadInfo();
-	crashpadInfo->set_system_crash_reporter_forwarding(crashpad::TriState::kDisabled);
 
 	return true;
 }

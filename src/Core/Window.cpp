@@ -27,8 +27,8 @@ Window::Window(const std::string& title, int width, int height)
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-	m_Window = glfwCreateWindow(width, height, m_Title.c_str(), NULL, NULL);
-	if (m_Window == NULL)
+	m_Window = glfwCreateWindow(width, height, m_Title.c_str(), nullptr, nullptr);
+	if (m_Window == nullptr)
 		FatalError();
 
 	glfwSetWindowUserPointer(m_Window, this);

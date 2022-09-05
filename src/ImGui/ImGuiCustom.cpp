@@ -17,7 +17,7 @@ static bool ButtonEx(const char* label, const ImVec2& size_arg = ImVec2(0, 0), b
 	ImGuiContext& g = *GImGui;
 	const ImGuiStyle& style = g.Style;
 	const ImGuiID id = window->GetID(label);
-	const ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
+	const ImVec2 label_size = ImGui::CalcTextSize(label, nullptr, true);
 
 	ImVec2 pos = window->DC.CursorPos;
 	if ((flags & ImGuiButtonFlags_AlignTextBaseLine) && style.FramePadding.y < window->DC.CurrLineTextBaseOffset) // Try to vertically align buttons that are smaller/have no padding so that text baseline matches (bit hacky, since it shouldn't be a flag)
@@ -94,7 +94,7 @@ static bool ButtonEx(const char* label, const ImVec2& size_arg = ImVec2(0, 0), b
 		ImGui::LogSetNextTextDecoration("[", "]");
 
 	auto padding = invisible ? ImVec2(0, 0) : style.FramePadding;
-	ImGui::RenderTextClipped(bb.Min + padding, bb.Max - padding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
+	ImGui::RenderTextClipped(bb.Min + padding, bb.Max - padding, label, nullptr, &label_size, style.ButtonTextAlign, &bb);
 
 	return pressed;
 }

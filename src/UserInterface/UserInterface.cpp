@@ -55,7 +55,7 @@ void UserInterface::RenderImGui()
 
 	m_CurrentView->RenderImGui();
 
-	{
+	{ // "1.0 (production)" text
 		ImGui::PushFont(m_FooterFont);
 
 		ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(BUILD_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
@@ -64,7 +64,7 @@ void UserInterface::RenderImGui()
 		ImGui::PopFont();
 	}
 	
-	{
+	{ // Sun/Moon icon button for theme switching
 		ImGui::PushFont(m_IconFont);
 
 		const auto themeButtonSize = ImVec2(
@@ -79,7 +79,7 @@ void UserInterface::RenderImGui()
 
 		const auto sunIcon = "\xef\x86\x85";
 		const auto moonIcon = "\xef\x86\x86";
-		if (ImGuardian::Button(m_DarkMode ? sunIcon : moonIcon, themeButtonSize, true))
+		if (ImGuardian::Button(m_DarkMode ? sunIcon : moonIcon, themeButtonSize, /*invisible =*/ true))
 		{
 			m_DarkMode = !m_DarkMode;
 			Instance<Application>::Get()->SetDarkMode(m_DarkMode);
