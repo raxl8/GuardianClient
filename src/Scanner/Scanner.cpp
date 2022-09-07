@@ -2,6 +2,7 @@
 
 #include "Scanner.h"
 
+#include "Core/Application.h"
 #include "Scanner/Stages/RecycleBinStage.h"
 
 Scanner::Scanner()
@@ -18,9 +19,13 @@ Scanner::~Scanner()
 
 void Scanner::Start()
 {
+	auto window = Application::Get()->GetWindow();
+	window->DisableCloseButton(true);
+
 	m_Status = ScannerStatus::InProgress;
-	m_ScanningThread = std::thread([this]()
+	m_ScanningThread = std::thread([this, window]()
 	{
+		bool shouldStop = false;
 		for (auto& stage : m_Stages)
 		{
 			auto stageResult = stage->Run();
@@ -37,10 +42,17 @@ void Scanner::Start()
 			case StageStatus::Error:
 			default:
 				m_Status = ScannerStatus::FatalError;
-				return;
+				shouldStop = true;
+				break;
 			}
+
+			if (shouldStop)
+				break;
 		}
 
-		m_Status = ScannerStatus::Success;
+		if (!shouldStop)
+			m_Status = ScannerStatus::Success;
+
+		window->DisableCloseButton(false);
 	});
 }

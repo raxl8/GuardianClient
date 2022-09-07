@@ -18,6 +18,7 @@ public:
 	void Hide();
 	void SetMinimized(bool minimized);
 	bool IsMinimized();
+	void DisableCloseButton(bool disable);
 
 	auto GetNativeWindow() const { return m_Window; }
 

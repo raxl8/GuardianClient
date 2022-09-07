@@ -18,6 +18,7 @@ public:
 	bool IsDarkMode() { return m_DarkMode; }
 	void SetDarkMode(bool enabled);
 	auto GetRenderer() const { return m_Renderer.get(); }
+	auto GetWindow() const { return m_Window.get(); }
 	auto GetUserInterface() const { return m_UserInterface.get(); }
 	auto GetScanner() { return m_Scanner.get(); }
 

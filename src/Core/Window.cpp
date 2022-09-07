@@ -19,6 +19,12 @@ static void IconifyCallback(GLFWwindow* window, int iconified)
 	windowPtr->SetMinimized(iconified);
 }
 
+static void CloseCallback(GLFWwindow* window)
+{
+	if (Instance<Application>::Get()->GetScanner()->GetStatus() == ScannerStatus::InProgress)
+		glfwSetWindowShouldClose(window, GLFW_FALSE);
+}
+
 Window::Window(const std::string& title, int width, int height)
 	: m_Title(title), m_Minimized(false)
 {
@@ -33,6 +39,7 @@ Window::Window(const std::string& title, int width, int height)
 
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSetWindowIconifyCallback(m_Window, IconifyCallback);
+	glfwSetWindowCloseCallback(m_Window, CloseCallback);
 
 #ifdef GDN_WINDOWS
 	auto hwnd = glfwGetWin32Window(m_Window);
@@ -120,4 +127,22 @@ bool Window::IsMinimized()
 {
 	std::shared_lock lock(m_MinimizedMutex);
 	return m_Minimized;
+}
+
+void Window::DisableCloseButton(bool disable)
+{
+#ifdef GDN_WINDOWS
+	auto hwnd = glfwGetWin32Window(m_Window);
+	UINT flags = MF_BYCOMMAND;
+	if (disable)
+	{
+		flags |= MF_DISABLED | MF_GRAYED;
+	}
+	else
+	{
+		flags |= MF_ENABLED;
+	}
+
+	EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE, flags);
+#endif
 }
