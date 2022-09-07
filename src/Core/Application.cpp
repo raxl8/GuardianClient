@@ -50,8 +50,6 @@ int Application::Run()
 {
 	m_Websocket->Start();
 
-	m_Window->Show();
-
 	m_RenderingThread = std::thread([this]
 	{
 		m_Window->SetRenderThread();
@@ -73,6 +71,12 @@ int Application::Run()
 			m_ImGuiLayer->End();
 
 			m_Window->Update();
+
+			static auto _ = [this]()
+			{
+				m_Window->Show();
+				return 0; // cannot assign void to _
+			}();
 		}
 	});
 
