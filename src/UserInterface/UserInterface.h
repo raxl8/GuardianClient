@@ -21,6 +21,8 @@ public:
 	bool IsDarkMode() { return m_DarkMode; }
 
 private:
+	void BeginView(const char* name);
+	void EndView();
 	void ApplyStyles();
 
 private:
@@ -29,5 +31,6 @@ private:
 
 	bool m_DisplayingError;
 	std::mutex m_CurrentViewMutex;
-	SharedPtr<View> m_CurrentView;
+	float m_ViewAnimationTime;
+	SharedPtr<View> m_PreviousView, m_CurrentView;
 };

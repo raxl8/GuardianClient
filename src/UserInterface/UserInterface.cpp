@@ -13,7 +13,7 @@
 #include <fonts/Roboto/Roboto-Regular.h>
 
 UserInterface::UserInterface()
-	: m_DisplayingError(false)
+	: m_DisplayingError(false), m_ViewAnimationTime(0.f)
 {
 	m_DarkMode = Instance<Application>::Get()->IsDarkMode();
 
@@ -46,54 +46,55 @@ void UserInterface::PushRegularFont()
 
 void UserInterface::RenderImGui()
 {
-	ImGui::SetNextWindowPos({ 0.f, 0.f });
-	ImGui::SetNextWindowSize({ WINDOW_WIDTH, WINDOW_HEIGHT });
+	if (m_PreviousView.get() && m_ViewAnimationTime < 1.f)
+	{
+		m_ViewAnimationTime += 2.f * ImGui::GetIO().DeltaTime;
+	}
+	else if (m_ViewAnimationTime > 0.f)
+	{
+		m_ViewAnimationTime = 0.f;
+		m_PreviousView = {};
+	}
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-	ImGui::Begin("##window", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
-	ImGui::PopStyleVar();
+	constexpr auto easeInOutQuart = [](float t)
+	{
+		float t2;
+		if (t < 0.5f)
+		{
+			t2 = t * t;
+			return 16.f * t * t2 * t2;
+		}
+		else
+		{
+			t2 = (--t) * t;
+			return 1.f + 16.f * t * t2 * t2;
+		}
+	};
+
+	if (m_PreviousView.get() && m_ViewAnimationTime > 0.f)
+	{
+		ImGui::SetNextWindowPos({ -WINDOW_WIDTH * easeInOutQuart(m_ViewAnimationTime), 0.f});
+		BeginView("##previousView");
+
+		m_PreviousView->RenderImGui();
+
+		EndView();
+	}
+
+	ImGui::SetNextWindowPos({ m_ViewAnimationTime > 0.f ? WINDOW_WIDTH - WINDOW_WIDTH * easeInOutQuart(m_ViewAnimationTime) : 0.f, 0.f});
+	BeginView("##view");
 
 	m_CurrentView->RenderImGui();
 
-	{ // "1.0 (production)" text
-		ImGui::PushFont(m_FooterFont);
-
-		ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(BUILD_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
-		ImGui::TextUnformatted(BUILD_DESCRIPTION);
-
-		ImGui::PopFont();
-	}
-	
-	{ // Sun/Moon icon button for theme switching
-		ImGui::PushFont(m_IconFont);
-
-		const auto themeButtonSize = ImVec2(
-			19.f, 19.f
-		);
-
-		const auto windowPadding = ImGui::GetStyle().WindowPadding;
-		ImGui::SetCursorPos(ImVec2(
-			WINDOW_WIDTH - themeButtonSize.x - windowPadding.x,
-			WINDOW_HEIGHT - themeButtonSize.y - windowPadding.y
-		));
-
-		const auto sunIcon = "\xef\x86\x85";
-		const auto moonIcon = "\xef\x86\x86";
-		if (ImGuardian::Button(m_DarkMode ? sunIcon : moonIcon, themeButtonSize, /*invisible =*/ true))
-		{
-			m_DarkMode = !m_DarkMode;
-			Instance<Application>::Get()->SetDarkMode(m_DarkMode);
-		}
-
-		ImGui::PopFont();
-	}
-
-	ImGui::End();
+	EndView();
 }
 
 void UserInterface::SetView(SharedPtr<View> newView)
 {
 	std::unique_lock lock(m_CurrentViewMutex);
+
+	if (m_CurrentView.get())
+		m_PreviousView = std::move(m_CurrentView);
 
 	m_CurrentView = std::move(newView);
 
@@ -119,6 +120,52 @@ void UserInterface::SetDarkMode(bool enabled)
 {
 	m_DarkMode = enabled;
 	ApplyStyles();
+}
+
+void UserInterface::BeginView(const char* name)
+{
+	ImGui::SetNextWindowSize({ WINDOW_WIDTH, WINDOW_HEIGHT });
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+	ImGui::Begin(name, nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	ImGui::PopStyleVar();
+}
+
+void UserInterface::EndView()
+{
+	{ // "1.0 (production)" text
+		ImGui::PushFont(m_FooterFont);
+
+		ImGui::SetCursorPosY(WINDOW_HEIGHT - ImGui::CalcTextSize(BUILD_DESCRIPTION).y - ImGui::GetStyle().WindowPadding.y);
+		ImGui::TextUnformatted(BUILD_DESCRIPTION);
+
+		ImGui::PopFont();
+	}
+
+	{ // Sun/Moon icon button for theme switching
+		ImGui::PushFont(m_IconFont);
+
+		const auto themeButtonSize = ImVec2(
+			19.f, 19.f
+		);
+
+		const auto windowPadding = ImGui::GetStyle().WindowPadding;
+		ImGui::SetCursorPos(ImVec2(
+			WINDOW_WIDTH - themeButtonSize.x - windowPadding.x,
+			WINDOW_HEIGHT - themeButtonSize.y - windowPadding.y
+		));
+
+		const auto sunIcon = "\xef\x86\x85";
+		const auto moonIcon = "\xef\x86\x86";
+		if (ImGuardian::Button(m_DarkMode ? sunIcon : moonIcon, themeButtonSize, /*invisible =*/ true))
+		{
+			m_DarkMode = !m_DarkMode;
+			Instance<Application>::Get()->SetDarkMode(m_DarkMode);
+		}
+
+		ImGui::PopFont();
+	}
+
+	ImGui::End();
 }
 
 void UserInterface::ApplyStyles()
