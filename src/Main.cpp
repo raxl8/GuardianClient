@@ -6,6 +6,7 @@
 #ifndef GDN_RELEASE
 #include "Core/ConsoleWindow.h"
 #else
+#include "Core/UniqueInstanceGuard.h"
 #include "Minidump/MinidumpClient.h"
 #include "Minidump/MinidumpServer.h"
 #endif
@@ -17,6 +18,8 @@ int RealMain(CommandLine commandLine)
 #ifdef GDN_RELEASE
 	if (commandLine.Contains("--crashpad-handler"))
 		return StartMinidumpServer(commandLine);
+
+	UniqueInstanceGuard uniqueInstanceGuard;
 
 	MinidumpClient minidumpClient;
 #endif
