@@ -11,7 +11,7 @@ class Application : public Instance<Application>
 {
 public:
 	Application();
-	~Application() = default;
+	~Application();
 
 	int Run();
 
@@ -32,6 +32,10 @@ private:
 	UniquePtr<Scanner> m_Scanner;
 
 	std::thread m_RenderingThread;
+
+#ifdef GDN_WINDOWS
+	HKEY m_RegistryKey;
+#endif
 };
 
 DEFINE_INSTANCE_TYPE(Application);

@@ -13,20 +13,36 @@ Application::Application()
 	m_UserInterface = MakeUnique<UserInterface>();
 
 #ifdef GDN_WINDOWS
+	if (RegOpenKeyExW(
+		HKEY_CURRENT_USER, L"Software\\Guardian",
+		0, KEY_ALL_ACCESS, &m_RegistryKey) != ERROR_SUCCESS)
+	{
+		RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Guardian", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &m_RegistryKey, NULL);
+	}
+
 	DWORD useDarkTheme = 0, systemUseLightTheme = 0;
 	DWORD dwordSize = sizeof(DWORD);
 	if (RegGetValueW(
-		HKEY_CURRENT_USER, L"Software\\Guardian", L"DarkTheme",
+		m_RegistryKey, nullptr, L"DarkTheme",
 		RRF_RT_REG_DWORD, nullptr, &useDarkTheme, &dwordSize) == ERROR_SUCCESS)
 	{
-		SetDarkMode(useDarkTheme == 1);
+		m_DarkMode = (useDarkTheme == 1);
 	}
 	else if (RegGetValueW(
 		HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", L"AppsUseLightTheme",
 		RRF_RT_REG_DWORD, nullptr, &systemUseLightTheme, &dwordSize) == ERROR_SUCCESS)
 	{
-		SetDarkMode(systemUseLightTheme == 0);
+		m_DarkMode = (systemUseLightTheme == 0);
 	}
+#endif
+
+	SetDarkMode(m_DarkMode);
+}
+
+Application::~Application()
+{
+#ifdef GDN_WINDOWS
+	RegCloseKey(m_RegistryKey);
 #endif
 }
 
@@ -75,21 +91,10 @@ void Application::SetDarkMode(bool enabled)
 	m_DarkMode = enabled;
 
 #ifdef GDN_WINDOWS
-	HKEY key = NULL;
-	if (RegOpenKeyExW(
-		HKEY_CURRENT_USER, L"Software\\Guardian",
-		0, KEY_ALL_ACCESS, &key) != ERROR_SUCCESS)
-	{
-		RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Guardian", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key, NULL);
-	}
-
-	if (key != NULL)
-	{
-		DWORD keyValue = m_DarkMode;
-		RegSetValueExW(
-			key, L"DarkTheme", 0,
-			REG_DWORD, (BYTE*)&keyValue, sizeof(DWORD));
-	}	
+	DWORD keyValue = m_DarkMode;
+	RegSetValueExW(
+		m_RegistryKey, L"DarkTheme", 0,
+		REG_DWORD, (BYTE*)&keyValue, sizeof(DWORD));
 #endif
 
 	m_Window->ChangeTitleBarTheme(enabled);
