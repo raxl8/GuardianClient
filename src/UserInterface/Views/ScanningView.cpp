@@ -68,6 +68,10 @@ void ScanningView::RenderImGui()
 	if (m_ProgressAnimating && m_ProgressAnimTime < 1.f)
 	{
 		m_ProgressAnimTime += ImGui::GetIO().DeltaTime;
+		// We need to clamp here as if the window is minimized,
+		// when restored DeltaTime could be > 1 and therefore
+		// make easeOutQuad return crazy values
+		m_ProgressAnimTime = std::clamp(m_ProgressAnimTime, 0.f, 1.f);
 		m_Progress = (m_TargetProgress - m_PrevProgress) * easeOutQuad(m_ProgressAnimTime);
 	}
 	else if (m_ProgressAnimTime >= 1.)
