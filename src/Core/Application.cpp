@@ -14,17 +14,10 @@ Application::Application()
 	m_UserInterface = MakeUnique<UserInterface>();
 
 #ifdef GDN_WINDOWS
-	if (RegOpenKeyExW(
-		HKEY_CURRENT_USER, L"Software\\Guardian",
-		0, KEY_ALL_ACCESS, &m_RegistryKey) != ERROR_SUCCESS)
-	{
-		RegCreateKeyExW(HKEY_CURRENT_USER, L"Software\\Guardian", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &m_RegistryKey, NULL);
-	}
-
 	DWORD useDarkTheme = 0, systemUseLightTheme = 0;
 	DWORD dwordSize = sizeof(DWORD);
 	if (RegGetValueW(
-		m_RegistryKey, nullptr, L"DarkTheme",
+		HKEY_CURRENT_USER, L"Software\\Guardian", L"DarkTheme",
 		RRF_RT_REG_DWORD, nullptr, &useDarkTheme, &dwordSize) == ERROR_SUCCESS)
 	{
 		m_DarkMode = (useDarkTheme == 1);
@@ -38,13 +31,6 @@ Application::Application()
 #endif
 
 	SetDarkMode(m_DarkMode);
-}
-
-Application::~Application()
-{
-#ifdef GDN_WINDOWS
-	RegCloseKey(m_RegistryKey);
-#endif
 }
 
 int Application::Run()
@@ -97,9 +83,9 @@ void Application::SetDarkMode(bool enabled)
 
 #ifdef GDN_WINDOWS
 	DWORD keyValue = m_DarkMode;
-	RegSetValueExW(
-		m_RegistryKey, L"DarkTheme", 0,
-		REG_DWORD, (BYTE*)&keyValue, sizeof(DWORD));
+	RegSetKeyValueW(
+		HKEY_CURRENT_USER, L"Software\\Guardian", L"DarkTheme",
+		REG_DWORD, (LPCVOID*)&keyValue, sizeof(keyValue));
 #endif
 
 	m_Window->ChangeTitleBarTheme(enabled);
