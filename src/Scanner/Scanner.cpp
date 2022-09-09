@@ -19,11 +19,12 @@ Scanner::~Scanner()
 
 void Scanner::Start()
 {
-	auto window = Application::Get()->GetWindow();
+	auto application = Application::Get();
+	auto window = application->GetWindow();
 	window->DisableCloseButton(true);
 
 	m_Status = ScannerStatus::InProgress;
-	m_ScanningThread = std::thread([this, window]()
+	m_ScanningThread = std::thread([this, application, window]()
 	{
 		bool shouldStop = false;
 		for (auto& stage : m_Stages)
@@ -53,6 +54,7 @@ void Scanner::Start()
 		if (!shouldStop)
 			m_Status = ScannerStatus::Success;
 
+		application->GetNotificationArea()->ShowToast("Scan has finished!");
 		window->DisableCloseButton(false);
 	});
 }

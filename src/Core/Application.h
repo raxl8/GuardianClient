@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/NotificationArea.h"
 #include "Core/Renderer.h"
 #include "Core/Window.h"
 #include "ImGui/ImGuiLayer.h"
@@ -18,6 +19,7 @@ public:
 	bool IsDarkMode() { return m_DarkMode; }
 	void SetDarkMode(bool enabled);
 	auto GetRenderer() const { return m_Renderer.get(); }
+	auto GetNotificationArea() const { return m_NotificationArea.get(); }
 	auto GetWindow() const { return m_Window.get(); }
 	auto GetUserInterface() const { return m_UserInterface.get(); }
 	auto GetScanner() { return m_Scanner.get(); }
@@ -27,6 +29,7 @@ private:
 
 	UniquePtr<Websocket> m_Websocket;
 	UniquePtr<Renderer> m_Renderer;
+	UniquePtr<NotificationArea> m_NotificationArea;
 	UniquePtr<Window> m_Window;
 	UniquePtr<ImGuiLayer> m_ImGuiLayer;
 	UniquePtr<UserInterface> m_UserInterface;

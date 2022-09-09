@@ -36,8 +36,12 @@ int RealMain(CommandLine commandLine)
 }
 
 #ifdef GDN_WINDOWS
+#include <winrt/base.h>
+
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
+	winrt::init_apartment();
+
 #ifndef GDN_RELEASE
 	ConsoleWindow console;
 #endif
