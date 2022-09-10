@@ -55,6 +55,7 @@ void Scanner::Start()
 			m_Status = ScannerStatus::Success;
 
 		application->GetNotificationArea()->ShowToast("Scan has finished!");
+		window->RequestAttention();
 		window->DisableCloseButton(false);
 	});
 }

@@ -117,6 +117,11 @@ void Window::Hide()
 	glfwHideWindow(m_Window);
 }
 
+void Window::RequestAttention()
+{
+	glfwRequestWindowAttention(m_Window);
+}
+
 void Window::SetMinimized(bool minimized)
 {
 	std::unique_lock lock(m_MinimizedMutex);

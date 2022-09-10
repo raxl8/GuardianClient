@@ -16,6 +16,7 @@ public:
 	void Update();
 	void Show();
 	void Hide();
+	void RequestAttention();
 	void SetMinimized(bool minimized);
 	bool IsMinimized();
 	void DisableCloseButton(bool disable);
