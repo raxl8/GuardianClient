@@ -9,7 +9,7 @@
 #include <fmt/printf.h>
 
 ScanningView::ScanningView(UserInterface* userInterface)
-	: m_ProgressAnimating(false), m_ProgressAnimTime(0.f),
+	: m_ProgressAnimTime(0.f),
 	m_PrevProgress(0.f), m_Progress(0.f), m_TargetProgress(0.f), View(userInterface)
 {
 	m_Scanner = Instance<Application>::Get()->GetScanner();
@@ -59,14 +59,22 @@ void ScanningView::RenderImGui()
 	const auto currentStage = m_Scanner->GetCurrentStage();
 	m_TargetProgress = static_cast<float>(currentStage) / static_cast<float>(m_StageCount);
 
-	if (!m_ProgressAnimating && m_PrevProgress != m_TargetProgress)
+	if (m_PrevProgress != m_TargetProgress)
 	{
-		m_Progress = m_PrevProgress;
-		m_ProgressAnimating = true;
-		m_ProgressAnimTime = 0.f;
+		if (m_ProgressAnimTime > 0.f)
+		{
+			// Start a new animation from where we at right now
+			m_PrevProgress = m_Progress;
+			m_ProgressAnimTime = 0.f;
+		}
+		else
+		{
+			m_Progress = m_PrevProgress;
+			m_ProgressAnimTime = 0.f;
+		}
 	}
 
-	if (m_ProgressAnimating && m_ProgressAnimTime < 1.f)
+	if (m_ProgressAnimTime < 1.f)
 	{
 		m_ProgressAnimTime += ImGui::GetIO().DeltaTime;
 		// We need to clamp here as if the window is minimized,
@@ -75,9 +83,8 @@ void ScanningView::RenderImGui()
 		m_ProgressAnimTime = std::clamp(m_ProgressAnimTime, 0.f, 1.f);
 		m_Progress = m_PrevProgress + (m_TargetProgress - m_PrevProgress) * easeOutExpo(m_ProgressAnimTime);
 	}
-	else if (m_ProgressAnimTime >= 1.)
+	else
 	{
-		m_ProgressAnimating = false;
 		m_ProgressAnimTime = 0.f;
 		m_PrevProgress = m_TargetProgress;
 		

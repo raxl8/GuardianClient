@@ -15,7 +15,6 @@ public:
 private:
 	Scanner* m_Scanner;
 	int m_StageCount;
-	bool m_ProgressAnimating;
 	float m_ProgressAnimTime;
 	float m_PrevProgress, m_Progress, m_TargetProgress;
 };
