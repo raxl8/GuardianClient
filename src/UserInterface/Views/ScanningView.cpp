@@ -50,9 +50,10 @@ void ScanningView::RenderImGui()
 		WINDOW_HEIGHT / 14.f,
 	};
 
-	constexpr const auto easeOutQuad = [](float t)
+	constexpr const auto easeOutExpo = [](float t)
 	{
-		return t * (2.f - t);
+		float t2 = (--t) * t;
+		return 1.f + t * t2 * t2;
 	};
 
 	const auto currentStage = m_Scanner->GetCurrentStage();
@@ -72,7 +73,7 @@ void ScanningView::RenderImGui()
 		// when restored DeltaTime could be > 1 and therefore
 		// make easeOutQuad return crazy values
 		m_ProgressAnimTime = std::clamp(m_ProgressAnimTime, 0.f, 1.f);
-		m_Progress = m_PrevProgress + (m_TargetProgress - m_PrevProgress) * easeOutQuad(m_ProgressAnimTime);
+		m_Progress = m_PrevProgress + (m_TargetProgress - m_PrevProgress) * easeOutExpo(m_ProgressAnimTime);
 	}
 	else if (m_ProgressAnimTime >= 1.)
 	{
