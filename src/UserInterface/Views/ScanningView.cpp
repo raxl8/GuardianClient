@@ -72,7 +72,7 @@ void ScanningView::RenderImGui()
 		// when restored DeltaTime could be > 1 and therefore
 		// make easeOutQuad return crazy values
 		m_ProgressAnimTime = std::clamp(m_ProgressAnimTime, 0.f, 1.f);
-		m_Progress = (m_TargetProgress - m_PrevProgress) * easeOutQuad(m_ProgressAnimTime);
+		m_Progress = m_PrevProgress + (m_TargetProgress - m_PrevProgress) * easeOutQuad(m_ProgressAnimTime);
 	}
 	else if (m_ProgressAnimTime >= 1.)
 	{
