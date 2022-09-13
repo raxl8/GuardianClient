@@ -61,3 +61,19 @@ static HookFunction hookFunction([]()
 
 	RtlVerifyVersionInfo = (decltype(RtlVerifyVersionInfo))GetProcAddress(ntdllHandle, "RtlVerifyVersionInfo");
 });
+
+ScopedHANDLE::ScopedHANDLE()
+	: m_Handle(INVALID_HANDLE_VALUE)
+{
+}
+
+ScopedHANDLE::ScopedHANDLE(HANDLE handle)
+	: m_Handle(handle)
+{
+}
+
+ScopedHANDLE::~ScopedHANDLE()
+{
+	if (m_Handle != INVALID_HANDLE_VALUE)
+		CloseHandle(m_Handle);
+}

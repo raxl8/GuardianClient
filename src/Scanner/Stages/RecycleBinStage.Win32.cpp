@@ -8,11 +8,9 @@
 
 StageResult RecycleBinStage::Run()
 {
-	HANDLE tokenHandle;
-	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &tokenHandle))
+	ScopedHANDLE tokenHandle;
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, tokenHandle.Get()))
 		return GDN_STAGERESULT(ErrorContinue, "OpenProcessToken returned %d", GetLastError());
-
-	CallOnDtor closeTokenHandle(CloseHandle, tokenHandle);
 
 	auto userToken = (TOKEN_USER*)malloc(sizeof(TOKEN_USER));
 	if (!userToken)
@@ -63,7 +61,7 @@ StageResult RecycleBinStage::Run()
 
 	FindClose(fileHandle);
 	
-	auto& fileTime = findData.ftLastWriteTime;
+	const auto& fileTime = findData.ftLastWriteTime;
 
 	ULARGE_INTEGER ull;
 	ull.LowPart = fileTime.dwLowDateTime;
